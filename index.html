@@ -60,6 +60,7 @@
 <div class="panel month">
   <div><div class="mnote">月累計（截至 9/28）</div><div class="big" id="mcum"></div></div>
   <div><div class="mnote">月目標</div><div class="big" id="mtgt"></div></div>
+  <div><div class="mnote">去年 9 月（全月）</div><div class="big" id="mly"></div><div class="mnote" id="mlyyoy"></div></div>
   <div style="flex:1;min-width:240px"><div class="mnote" id="mpctlabel"></div><div class="bar"><span id="mbar"></span></div></div>
 </div>
 
@@ -146,6 +147,9 @@ document.getElementById('mcum').textContent=money(MONTH_CUM);
 document.getElementById('mtgt').textContent=money(MONTH_TARGET);
 document.getElementById('mpctlabel').innerHTML=`達成率 <b>${pct.toFixed(1)}%</b>　（月進度 ${(DAYS_ELAPSED/MONTH_DAYS*100).toFixed(0)}%，剩 ${MONTH_DAYS-DAYS_ELAPSED} 天）`;
 document.getElementById('mbar').style.width=Math.min(100,pct)+'%';
+const MONTH_LY=19667898;
+document.getElementById('mly').textContent=money(MONTH_LY);
+document.getElementById('mlyyoy').innerHTML='今年累計＝去年全月 '+(MONTH_CUM/MONTH_LY*100).toFixed(1)+'%';
 
 // 廣告 KPI（上週 vs 上上週）
 const [alw,apw]=sl(DAILY_AD),[glw,gpw]=sl(GA4_DAILY);
@@ -186,7 +190,7 @@ document.getElementById('octrisk').innerHTML=`<b>風險盤查（現況戰況）<
 • <b>最大破口：寶寶粥&其他</b>（權重 31%）：趨勢 −18% 卻需逆勢翻正（保守 −2%／積極 +7%），補不回即拖垮總額。<br>
 • <b>滴雞精</b>積極 +36% 遠高於趨勢（+17%）；<b>兒童保健</b>去年基期高，但今年 YOYO 聯名延續有撐。<br>
 • <b>真正成長引擎在 11 月雙11</b>；10 月定位為守＋蓄水獲新客。<br>
-• 實際官網案型（滿額贈／加購／檔期機制）另轉 Ann。`;
+• 實際官網案型（滿額贈／加購／檔期機制）Ann 介紹。`;
 
 document.getElementById('foot').innerHTML='資料來源：業績報表（Winnie 建立）2026｜9月＋10月分頁；廣告＝KDDR BI 報告；流量＝GA4　｜　更新：2026-09-29';
 </script>
