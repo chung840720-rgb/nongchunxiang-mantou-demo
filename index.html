@@ -151,7 +151,7 @@ document.getElementById('adkpis').innerHTML=[
  ['其他 sessions（GA4）',nf(GL.oth),wow(GL.oth,GP.oth),nf(GP.oth)]
 ].map(([k,v,w,p])=>`<div class="card"><div class="k">${k}</div><div class="v">${v}</div><div class="wow ${w.cls}">${w.s}</div><div class="prev">上上週 ${p}</div></div>`).join('');
 const paidShare=GL.paid/(GL.paid+GL.org+GL.oth)*100;
-document.getElementById('adinsight').innerHTML=`上週廣告 <b>${wow(AL.tot,AP.tot).s}</b>（FB ${wow(AL.fb,AP.fb).s}、Google ${wow(AL.g,AP.g).s}）；GA4 付費 sessions ${wow(GL.paid,GP.paid).s}、自然 ${wow(GL.org,GP.org).s}——<b>付費與自然雙降、自然跌更多</b>，非單純付費收手；付費佔上週流量 ${paidShare.toFixed(0)}%（高度依賴付費）。`;
+document.getElementById('adinsight').innerHTML=`上週廣告費 <b>${wow(AL.tot,AP.tot).s}</b>（FB ${wow(AL.fb,AP.fb).s}、Google ${wow(AL.g,AP.g).s}）、付費 sessions ${wow(GL.paid,GP.paid).s}，但營業額 <b>${wow(L.rev,P.rev).s}</b>、ROAS <b>${wow(L.roas,P.roas).s}</b>——<b>加碼廣告、流量有進，卻轉不動</b>（轉換率 ${wow(L.cr,P.cr).s}、CPA ${wow(L.cpa,P.cpa,true).s}）。付費佔上週流量 ${paidShare.toFixed(0)}%（高度依賴付費）。`;
 
 // charts
 function bars(el,data,vi,hiFrom,color,hi,W){W=W||1120;const H=210,padB=22,padT=8,n=data.length,max=Math.max(...data.map(r=>r[vi]));const bw=(W-16)/n,gap=Math.min(6,bw*0.22);let s='';data.forEach((r,i)=>{const x=8+i*bw,bh=(r[vi]/max)*(H-padT-padB),y=H-padB-bh,c=(i>=hiFrom)?hi:color;s+=`<rect x="${(x+gap/2).toFixed(1)}" y="${y.toFixed(1)}" width="${(bw-gap).toFixed(1)}" height="${bh.toFixed(1)}" rx="2" fill="${c}"><title>9/${r[0]}: ${nf(r[vi])}</title></rect>`;if(r[0]%7===1||r[0]===28)s+=`<text x="${(x+bw/2).toFixed(1)}" y="${H-6}" font-size="11" fill="#6b7686" text-anchor="middle">9/${r[0]}</text>`;});el.innerHTML=`<svg viewBox="0 0 ${W} ${H}" role="img">${s}</svg>`;}
