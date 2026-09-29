@@ -64,6 +64,12 @@
   <div style="flex:1;min-width:240px"><div class="mnote" id="mpctlabel"></div><div class="bar"><span id="mbar"></span></div></div>
 </div>
 
+<div class="panel">
+  <div class="mnote" style="margin-bottom:8px">9 月 YoY 對比（今年 vs 去年 vs 目標）</div>
+  <div id="yoybars"></div>
+  <div class="mnote" id="yoynote" style="margin-top:8px"></div>
+</div>
+
 <h2>營運 KPI（上週 vs 上上週）</h2>
 <div class="grid" id="kpis"></div>
 
@@ -150,6 +156,11 @@ document.getElementById('mbar').style.width=Math.min(100,pct)+'%';
 const MONTH_LY=19667898;
 document.getElementById('mly').textContent=money(MONTH_LY);
 document.getElementById('mlyyoy').innerHTML='今年累計＝去年全月 '+(MONTH_CUM/MONTH_LY*100).toFixed(1)+'%';
+const proj=Math.round(MONTH_CUM/DAYS_ELAPSED*MONTH_DAYS);
+const yoyData=[['月目標',MONTH_TARGET,'#0f5faf'],['去年9月（全月）',MONTH_LY,'#9aa6b2'],['今年推估（全月）',proj,'#e0993a'],['今年累計（截至9/28）',MONTH_CUM,'#3f7d5a']];
+const ymax=Math.max(...yoyData.map(r=>r[1]));
+document.getElementById('yoybars').innerHTML=yoyData.map(([nm,v,c])=>`<div class="catrow"><div class="nm" style="width:150px">${nm}</div><div class="track"><i style="width:${(v/ymax*100).toFixed(1)}%;background:${c}"></i></div><div class="val"><b>${money(v)}</b></div></div>`).join('');
+document.getElementById('yoynote').innerHTML=`今年推估全月 <b>${money(proj)}</b>：YoY <b>${((proj/MONTH_LY-1)*100).toFixed(1)}%</b>（vs 去年9月）、vs 月目標 <b>${((proj/MONTH_TARGET-1)*100).toFixed(1)}%</b>。缺口同時來自「目標拉高（+20%）」與「今年較去年下滑」。`;
 
 // 廣告 KPI（上週 vs 上上週）
 const [alw,apw]=sl(DAILY_AD),[glw,gpw]=sl(GA4_DAILY);
