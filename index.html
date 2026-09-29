@@ -5,13 +5,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>農純鄉 官網週戰況</title>
 <style>
-  :root{--bg:#f4f6f8;--card:#fff;--ink:#1c2430;--sub:#6b7686;--line:#e6eaef;--good:#137a4b;--goodbg:#e5f4ec;--bad:#c0392b;--badbg:#fbe9e7;--warn:#9a6a00;--accent:#0f5faf;}
+  :root{--bg:#f4f6f8;--card:#fff;--ink:#1c2430;--sub:#6b7686;--line:#e6eaef;--good:#137a4b;--goodbg:#e5f4ec;--bad:#c0392b;--badbg:#fbe9e7;--warn:#9a6a00;--accent:#0f5faf;--fb:#2f6fb0;--gg:#e0993a;--cat:#3f7d5a;}
   *{box-sizing:border-box;margin:0;padding:0}
   body{font-family:-apple-system,"Segoe UI","Noto Sans TC",system-ui,sans-serif;background:var(--bg);color:var(--ink);line-height:1.5;padding:20px;max-width:1180px;margin:0 auto}
   header{display:flex;flex-wrap:wrap;align-items:baseline;gap:8px 16px;margin-bottom:6px}
   h1{font-size:24px;font-weight:700}
   .period{color:var(--sub);font-size:15px}
-  .banner{background:var(--badbg);border-left:4px solid var(--bad);padding:10px 14px;border-radius:0 8px 8px 0;margin:12px 0 20px;font-size:15px}
+  .banner{background:var(--badbg);border-left:4px solid var(--bad);padding:10px 14px;border-radius:0 8px 8px 0;margin:12px 0 18px;font-size:15px}
   .banner b{color:var(--bad)}
   h2{font-size:14px;color:var(--sub);font-weight:600;letter-spacing:.03em;margin:22px 0 10px;text-transform:uppercase}
   .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
@@ -29,9 +29,20 @@
   .bar>span{display:block;height:100%;background:var(--accent)}
   .mnote{color:var(--sub);font-size:13px}
   svg{width:100%;height:auto;display:block}
-  .chart-legend{font-size:12px;color:var(--sub);margin-top:6px}
-  footer{color:var(--sub);font-size:12px;margin-top:22px;border-top:1px solid var(--line);padding-top:12px}
+  .legend{font-size:12px;color:var(--sub);margin-top:6px}
   .dot{display:inline-block;width:9px;height:9px;border-radius:2px;vertical-align:middle;margin-right:4px}
+  .adtop{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:12px}
+  @media(max-width:820px){.adtop{grid-template-columns:1fr}}
+  .split{height:16px;border-radius:8px;overflow:hidden;display:flex;margin-top:10px}
+  .split>i{display:block;height:100%}
+  .catrow{display:flex;align-items:center;gap:10px;margin:6px 0;font-size:13px}
+  .catrow .nm{width:110px;color:var(--ink);flex:none;text-align:right}
+  .catrow .track{flex:1;background:#eef1f4;border-radius:6px;height:16px;overflow:hidden}
+  .catrow .track>i{display:block;height:100%;background:var(--cat)}
+  .catrow .val{width:78px;flex:none;color:var(--sub);text-align:right}
+  .two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  @media(max-width:820px){.two{grid-template-columns:1fr}}
+  footer{color:var(--sub);font-size:12px;margin-top:22px;border-top:1px solid var(--line);padding-top:12px}
 </style>
 </head>
 <body>
@@ -40,15 +51,6 @@
   <span class="period" id="period"></span>
 </header>
 <div class="banner" id="banner"></div>
-
-<h2>上週 KPI（vs 前週 WoW）</h2>
-<div class="grid" id="kpis"></div>
-
-<h2>每日營業額趨勢（9月・上週標色）</h2>
-<div class="panel">
-  <div id="chart"></div>
-  <div class="chart-legend"><span class="dot" style="background:#c7d2de"></span>前幾週　<span class="dot" style="background:#0f5faf"></span>上週（9/22–9/28）</div>
-</div>
 
 <h2>9 月月累計 vs 月目標</h2>
 <div class="panel month">
@@ -60,10 +62,32 @@
   </div>
 </div>
 
+<h2>上週 KPI（vs 前週 WoW）</h2>
+<div class="grid" id="kpis"></div>
+
+<h2>每日營業額趨勢（9月・上週標色）</h2>
+<div class="panel">
+  <div id="chart"></div>
+  <div class="legend"><span class="dot" style="background:#c7d2de"></span>前幾週　<span class="dot" style="background:#0f5faf"></span>上週（9/22–9/28）</div>
+</div>
+
+<h2>廣告數據（9月）</h2>
+<div class="adtop" id="adcards"></div>
+<div class="two">
+  <div class="panel">
+    <div class="mnote" style="margin-bottom:4px">每日廣告花費（FB／Google）</div>
+    <div id="adchart"></div>
+    <div class="legend"><span class="dot" style="background:#2f6fb0"></span>Facebook　<span class="dot" style="background:#e0993a"></span>Google</div>
+  </div>
+  <div class="panel">
+    <div class="mnote" style="margin-bottom:8px">各品類廣告花費 Top 10</div>
+    <div id="catbars"></div>
+  </div>
+</div>
+
 <footer id="foot"></footer>
 
 <script>
-// 9月每日：[日, 流量, 不重複, 訂單, 營業額, 廣告費]
 const daily = [
  [1,31567,11585,411,1016251,198425],[2,19024,8187,202,656214,122938],[3,18182,8633,160,556835,121050],
  [4,16388,7466,153,488636,104041],[5,14651,6527,122,351041,82724],[6,15821,6267,156,392459,78603],
@@ -76,65 +100,85 @@ const daily = [
  [25,14379,5844,147,391463,83615],[26,13431,5694,108,337795,81847],[27,13737,6053,131,337282,87216],
  [28,18234,6631,213,538339,88644]
 ];
-const MONTH_TARGET = 23601478, MONTH_CUM = 15436885, MONTH_DAYS = 30, DAYS_ELAPSED = 28;
+const MONTH_TARGET=23601478, MONTH_CUM=15436885, MONTH_DAYS=30, DAYS_ELAPSED=28;
+const CAT_SPEND=[["滴雞精",668363],["鱸魚精",634919],["不分品項",589319],["寶寶粥",245898],["益生菌",212958],["寶寶燉飯",180475],["寶寶米餅",133738],["葉黃素果凍條",120004],["寶寶高湯",111513],["寶寶麵",106087],["寶寶肉鬆",97824],["寶寶肉燥",97824],["寶寶醬",97824],["寶寶燴麵",97824],["蔓越莓",43024],["黑豆茶",17705],["卵磷脂",1737],["膠原蛋白",1737],["葉黃素",1737],["馬尾草",1737]];
+const CHANNEL=[["Facebook",2213934],["Google",1248309]];
+const DAILY_AD=[[1,146378,50895],[2,75546,47312],[3,75827,44731],[4,61701,41614],[5,40508,41851],[6,35965,42473],[7,95672,46091],[8,101695,41232],[9,158401,44092],[10,76088,39531],[11,38309,36633],[12,24800,36832],[13,34976,37672],[14,100518,46771],[15,117432,52943],[16,106179,49404],[17,74963,51315],[18,45035,48582],[19,34485,47122],[20,47789,51184],[21,163073,51968],[22,156854,62391],[23,130684,60594],[24,65442,40675],[25,50297,33006],[26,49854,31730],[27,55216,31632],[28,50245,38032]];
 
-const sum = (a,i)=>a.reduce((s,r)=>s+r[i],0);
-const lastWk = daily.slice(21,28);   // 9/22-9/28
-const prevWk = daily.slice(14,21);   // 9/15-9/21
-const agg = wk => ({rev:sum(wk,4),ord:sum(wk,3),uv:sum(wk,2),tv:sum(wk,1),ad:sum(wk,5)});
-const L = agg(lastWk), P = agg(prevWk);
-L.aov = L.rev/L.ord; P.aov = P.rev/P.ord;
-L.cr = L.ord/L.uv; P.cr = P.ord/P.uv;
-L.roas = L.rev/L.ad; P.roas = P.rev/P.ad;
-L.cpa = L.ad/L.ord; P.cpa = P.ad/P.ord;
+const sum=(a,i)=>a.reduce((s,r)=>s+r[i],0);
+const nf=n=>Math.round(n).toLocaleString('en-US');
+const money=n=>'$'+nf(n);
+const wow=(cur,prev,inv=false)=>{const d=(cur-prev)/prev*100;const up=d>=0;const cls=Math.abs(d)<0.5?'flat':((up!==inv)?'up':'down');return {cls,s:(d>=0?'+':'')+d.toFixed(1)+'%'};};
 
-const nf = n => n.toLocaleString('en-US',{maximumFractionDigits:0});
-const money = n => '$'+nf(n);
-const wow = (cur,prev,inv=false)=>{const d=(cur-prev)/prev*100; const up=d>=0; const cls=Math.abs(d)<0.5?'flat':((up!==inv)?'up':'down'); const s=(d>=0?'+':'')+d.toFixed(1)+'%'; return {cls,s};};
+const lastWk=daily.slice(21,28), prevWk=daily.slice(14,21);
+const agg=wk=>{const o={rev:sum(wk,4),ord:sum(wk,3),uv:sum(wk,2),tv:sum(wk,1),ad:sum(wk,5)};o.aov=o.rev/o.ord;o.cr=o.ord/o.uv;o.roas=o.rev/o.ad;o.cpa=o.ad/o.ord;return o;};
+const L=agg(lastWk), P=agg(prevWk);
 
-document.getElementById('period').textContent = '上週覆盤　2026/09/22 – 09/28（官網成交口徑）';
+document.getElementById('period').textContent='上週覆盤　2026/09/22 – 09/28';
 
-const kpis = [
- ['營業額', money(L.rev), wow(L.rev,P.rev), money(P.rev)],
- ['訂單數', nf(L.ord), wow(L.ord,P.ord), nf(P.ord)],
- ['不重複流量', nf(L.uv), wow(L.uv,P.uv), nf(P.uv)],
- ['轉換率', (L.cr*100).toFixed(2)+'%', wow(L.cr,P.cr), (P.cr*100).toFixed(2)+'%'],
- ['客單價', money(L.aov), wow(L.aov,P.aov), money(P.aov)],
- ['廣告費', money(L.ad), wow(L.ad,P.ad,true), money(P.ad)],
- ['ROAS', L.roas.toFixed(2), wow(L.roas,P.roas), P.roas.toFixed(2)],
- ['CPA', money(L.cpa), wow(L.cpa,P.cpa,true), money(P.cpa)]
+// 月目標（頂部）
+const pct=MONTH_CUM/MONTH_TARGET*100;
+document.getElementById('mcum').textContent=money(MONTH_CUM);
+document.getElementById('mtgt').textContent=money(MONTH_TARGET);
+document.getElementById('mpctlabel').innerHTML=`達成率 <b>${pct.toFixed(1)}%</b>　（月進度 ${(DAYS_ELAPSED/MONTH_DAYS*100).toFixed(0)}%，剩 ${MONTH_DAYS-DAYS_ELAPSED} 天）`;
+document.getElementById('mbar').style.width=Math.min(100,pct)+'%';
+
+// KPI
+const kpis=[
+ ['營業額',money(L.rev),wow(L.rev,P.rev),money(P.rev)],
+ ['訂單數',nf(L.ord),wow(L.ord,P.ord),nf(P.ord)],
+ ['不重複流量',nf(L.uv),wow(L.uv,P.uv),nf(P.uv)],
+ ['轉換率',(L.cr*100).toFixed(2)+'%',wow(L.cr,P.cr),(P.cr*100).toFixed(2)+'%'],
+ ['客單價',money(L.aov),wow(L.aov,P.aov),money(P.aov)],
+ ['廣告費',money(L.ad),wow(L.ad,P.ad,true),money(P.ad)],
+ ['ROAS',L.roas.toFixed(2),wow(L.roas,P.roas),P.roas.toFixed(2)],
+ ['CPA',money(L.cpa),wow(L.cpa,P.cpa,true),money(P.cpa)]
 ];
-document.getElementById('kpis').innerHTML = kpis.map(([k,v,w,p])=>
- `<div class="card"><div class="k">${k}</div><div class="v">${v}</div><div class="wow ${w.cls}">${w.s}</div><div class="prev">前週 ${p}</div></div>`).join('');
+document.getElementById('kpis').innerHTML=kpis.map(([k,v,w,p])=>`<div class="card"><div class="k">${k}</div><div class="v">${v}</div><div class="wow ${w.cls}">${w.s}</div><div class="prev">前週 ${p}</div></div>`).join('');
 
-// takeaway banner
-document.getElementById('banner').innerHTML =
- `上週官網營業額 <b>${money(L.rev)}</b>（WoW <b>${wow(L.rev,P.rev).s}</b>）：流量 ${wow(L.uv,P.uv).s}、訂單 ${wow(L.ord,P.ord).s}、客單 ${wow(L.aov,P.aov).s}、ROAS ${wow(L.roas,P.roas).s} 全面下滑。9 月為中秋前蓄水淡週，成長引擎落在 10 月雙11。`;
+document.getElementById('banner').innerHTML=`上週官網營業額 <b>${money(L.rev)}</b>（WoW <b>${wow(L.rev,P.rev).s}</b>）：流量 ${wow(L.uv,P.uv).s}、訂單 ${wow(L.ord,P.ord).s}、客單 ${wow(L.aov,P.aov).s}、ROAS ${wow(L.roas,P.roas).s} 全面下滑。9 月為中秋前蓄水淡週，成長引擎落在 10 月雙11。`;
 
-// 每日營業額 bar chart (inline SVG)
+// 營業額每日 chart
+function barChart(el,data,valIdx,hiFrom,color,hi){
+ const W=1120,H=220,padB=22,padT=8,n=data.length,max=Math.max(...data.map(r=>r[valIdx]));
+ const bw=(W-16)/n, gap=Math.min(6,bw*0.22);let s='';
+ data.forEach((r,i)=>{const x=8+i*bw,bh=(r[valIdx]/max)*(H-padT-padB),y=H-padB-bh,c=(i>=hiFrom)?hi:color;
+  s+=`<rect x="${(x+gap/2).toFixed(1)}" y="${y.toFixed(1)}" width="${(bw-gap).toFixed(1)}" height="${bh.toFixed(1)}" rx="2" fill="${c}"><title>9/${r[0]}: $${nf(r[valIdx])}</title></rect>`;
+  if(r[0]%7===1||r[0]===28)s+=`<text x="${(x+bw/2).toFixed(1)}" y="${H-6}" font-size="11" fill="#6b7686" text-anchor="middle">9/${r[0]}</text>`;});
+ el.innerHTML=`<svg viewBox="0 0 ${W} ${H}" role="img">${s}</svg>`;
+}
+barChart(document.getElementById('chart'),daily,4,21,'#c7d2de','#0f5faf');
+
+// 廣告卡片
+const fb=CHANNEL[0][1], gg=CHANNEL[1][1], adtot=fb+gg;
+document.getElementById('adcards').innerHTML=`
+ <div class="card"><div class="k">總廣告費（9月）</div><div class="v">${money(adtot)}</div><div class="split"><i style="width:${fb/adtot*100}%;background:#2f6fb0"></i><i style="width:${gg/adtot*100}%;background:#e0993a"></i></div></div>
+ <div class="card"><div class="k">Facebook</div><div class="v">${money(fb)}</div><div class="prev">佔 ${(fb/adtot*100).toFixed(1)}%</div></div>
+ <div class="card"><div class="k">Google</div><div class="v">${money(gg)}</div><div class="prev">佔 ${(gg/adtot*100).toFixed(1)}%</div></div>`;
+
+// 每日廣告 stacked
 (function(){
- const W=1120,H=240,padL=8,padR=8,padT=10,padB=22, n=daily.length;
- const max=Math.max(...daily.map(r=>r[4]));
- const bw=(W-padL-padR)/n, gap=Math.min(6,bw*0.22);
- let bars='',labels='';
- daily.forEach((r,i)=>{
-   const x=padL+i*bw, bh=(r[4]/max)*(H-padT-padB), y=H-padB-bh;
-   const inLast=i>=21;
-   bars+=`<rect x="${(x+gap/2).toFixed(1)}" y="${y.toFixed(1)}" width="${(bw-gap).toFixed(1)}" height="${bh.toFixed(1)}" rx="2" fill="${inLast?'#0f5faf':'#c7d2de'}"><title>9/${r[0]}: $${nf(r[4])}</title></rect>`;
-   if(r[0]%7===1||r[0]===28) labels+=`<text x="${(x+bw/2).toFixed(1)}" y="${H-6}" font-size="11" fill="#6b7686" text-anchor="middle">9/${r[0]}</text>`;
- });
- document.getElementById('chart').innerHTML=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="每日營業額">${bars}${labels}</svg>`;
+ const W=560,H=220,padB=22,padT=8,n=DAILY_AD.length,max=Math.max(...DAILY_AD.map(r=>r[1]+r[2]));
+ const bw=(W-16)/n, gap=Math.min(4,bw*0.2);let s='';
+ DAILY_AD.forEach((r,i)=>{const x=8+i*bw,w=bw-gap;
+  const fbh=(r[1]/max)*(H-padT-padB), ggh=(r[2]/max)*(H-padT-padB);
+  const yFb=H-padB-fbh, yGg=yFb-ggh;
+  s+=`<rect x="${(x+gap/2).toFixed(1)}" y="${yFb.toFixed(1)}" width="${w.toFixed(1)}" height="${fbh.toFixed(1)}" fill="#2f6fb0"><title>9/${r[0]} FB $${nf(r[1])}</title></rect>`;
+  s+=`<rect x="${(x+gap/2).toFixed(1)}" y="${yGg.toFixed(1)}" width="${w.toFixed(1)}" height="${ggh.toFixed(1)}" fill="#e0993a"><title>9/${r[0]} Google $${nf(r[2])}</title></rect>`;
+  if(r[0]%7===1||r[0]===28)s+=`<text x="${(x+bw/2).toFixed(1)}" y="${H-6}" font-size="11" fill="#6b7686" text-anchor="middle">9/${r[0]}</text>`;});
+ document.getElementById('adchart').innerHTML=`<svg viewBox="0 0 ${W} ${H}" role="img">${s}</svg>`;
 })();
 
-// 月目標
-const pct = MONTH_CUM/MONTH_TARGET*100;
-document.getElementById('mcum').textContent = money(MONTH_CUM);
-document.getElementById('mtgt').textContent = money(MONTH_TARGET);
-document.getElementById('mpctlabel').innerHTML = `達成率 <b>${pct.toFixed(1)}%</b>　（月進度 ${(DAYS_ELAPSED/MONTH_DAYS*100).toFixed(0)}%，剩 ${MONTH_DAYS-DAYS_ELAPSED} 天）`;
-document.getElementById('mbar').style.width = Math.min(100,pct)+'%';
+// 品類 Top10 bars
+(function(){
+ const top=CAT_SPEND.slice(0,10), rest=CAT_SPEND.slice(10).reduce((a,r)=>a+r[1],0);
+ const rows=[...top]; if(rest>0)rows.push(['其他 '+(CAT_SPEND.length-10)+' 項',rest]);
+ const max=Math.max(...rows.map(r=>r[1]));
+ document.getElementById('catbars').innerHTML=rows.map(([nm,v])=>
+  `<div class="catrow"><div class="nm">${nm}</div><div class="track"><i style="width:${(v/max*100).toFixed(1)}%"></i></div><div class="val">${money(v)}</div></div>`).join('');
+})();
 
-document.getElementById('foot').innerHTML =
- '資料來源：農純鄉業績報表（Winnie 建立）· 2026｜9月分頁　｜　口徑：官網成交　｜　快速版 by 饅頭　｜　更新：2026-09-29';
+document.getElementById('foot').innerHTML='資料來源：業績報表（Winnie 建立）2026｜9月分頁；廣告＝KDDR BI 報告　｜　更新：2026-09-29';
 </script>
 </body>
 </html>
