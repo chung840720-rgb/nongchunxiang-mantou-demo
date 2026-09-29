@@ -70,8 +70,9 @@
 <div class="panel"><div id="chart"></div>
   <div class="legend"><span class="dot" style="background:#c7d2de"></span>前幾週　<span class="dot" style="background:#0f5faf"></span>上週（9/21–9/27）</div></div>
 
-<h2>廣告 KPI（上週 vs 上上週）</h2>
-<div class="grid" id="adkpis"></div>
+<h2>廣告總表（上週 vs 上上週）</h2>
+<div class="grid" id="adspend" style="grid-template-columns:repeat(3,1fr)"></div>
+<div class="grid" id="adga4" style="grid-template-columns:repeat(3,1fr);margin-top:12px"></div>
 <div class="mnote" id="adinsight" style="margin-top:10px"></div>
 
 <div class="two">
@@ -87,10 +88,22 @@
 <h2>上週廣告投放成效（僅上週資料）</h2>
 <div class="grid" id="perfcards"></div>
 
+<div style="border-top:3px solid var(--ink);opacity:.85;margin:44px 0 0"></div>
+<div style="text-align:center;color:var(--sub);font-size:12px;letter-spacing:.1em;margin:6px 0 0">— 下一段：10 月展望 —</div>
+
 <h2>10 月業績目標（保守 +10% ／ 積極 +20%）＋ 風險盤查</h2>
 <div class="grid" id="octtot" style="grid-template-columns:repeat(3,1fr)"></div>
 <div class="panel" id="octtable"></div>
 <div class="risk" id="octrisk"></div>
+
+<h2>本月專案（饅頭）：IG 內容牆</h2>
+<div class="panel" style="border-left:4px solid var(--accent)">
+  <div style="font-size:15px;line-height:1.9">
+    • <b>目標</b>：增強「瀏覽後 → 加購物車」這段的轉換率（對症上週「流量有進、轉不動」）。<br>
+    • <b>方法</b>：先做 A/B test，測試一個月。<br>
+    • <b>延伸</b>：效果佳 → 輔助雙11進站流量，<b>預期降低 CPA</b>。
+  </div>
+</div>
 
 <footer id="foot"></footer>
 
@@ -142,14 +155,9 @@ const [alw,apw]=sl(DAILY_AD),[glw,gpw]=sl(GA4_DAILY);
 const ad=w=>({fb:sum(w,1),g:sum(w,2),tot:sum(w,1)+sum(w,2)});
 const ga=w=>({paid:sum(w,1),org:sum(w,2),oth:sum(w,3)});
 const AL=ad(alw),AP=ad(apw),GL=ga(glw),GP=ga(gpw);
-document.getElementById('adkpis').innerHTML=[
- ['總廣告費',money(AL.tot),wow(AL.tot,AP.tot,true),money(AP.tot)],
- ['Facebook 花費',money(AL.fb),wow(AL.fb,AP.fb,true),money(AP.fb)],
- ['Google 花費',money(AL.g),wow(AL.g,AP.g,true),money(AP.g)],
- ['付費 sessions（GA4）',nf(GL.paid),wow(GL.paid,GP.paid),nf(GP.paid)],
- ['自然 sessions（GA4）',nf(GL.org),wow(GL.org,GP.org),nf(GP.org)],
- ['其他 sessions（GA4）',nf(GL.oth),wow(GL.oth,GP.oth),nf(GP.oth)]
-].map(([k,v,w,p])=>`<div class="card"><div class="k">${k}</div><div class="v">${v}</div><div class="wow ${w.cls}">${w.s}</div><div class="prev">上上週 ${p}</div></div>`).join('');
+const adCard=arr=>arr.map(([k,v,w,p])=>`<div class="card"><div class="k">${k}</div><div class="v">${v}</div><div class="wow ${w.cls}">${w.s}</div><div class="prev">上上週 ${p}</div></div>`).join('');
+document.getElementById('adspend').innerHTML=adCard([['總廣告費',money(AL.tot),wow(AL.tot,AP.tot,true),money(AP.tot)],['Facebook 花費',money(AL.fb),wow(AL.fb,AP.fb,true),money(AP.fb)],['Google 花費',money(AL.g),wow(AL.g,AP.g,true),money(AP.g)]]);
+document.getElementById('adga4').innerHTML=adCard([['付費 sessions（GA4）',nf(GL.paid),wow(GL.paid,GP.paid),nf(GP.paid)],['自然 sessions（GA4）',nf(GL.org),wow(GL.org,GP.org),nf(GP.org)],['其他 sessions（GA4）',nf(GL.oth),wow(GL.oth,GP.oth),nf(GP.oth)]]);
 const paidShare=GL.paid/(GL.paid+GL.org+GL.oth)*100;
 document.getElementById('adinsight').innerHTML=`上週廣告費 <b>${wow(AL.tot,AP.tot).s}</b>（FB ${wow(AL.fb,AP.fb).s}、Google ${wow(AL.g,AP.g).s}）、付費 sessions ${wow(GL.paid,GP.paid).s}，但營業額 <b>${wow(L.rev,P.rev).s}</b>、ROAS <b>${wow(L.roas,P.roas).s}</b>——<b>加碼廣告、流量有進，卻轉不動</b>（轉換率 ${wow(L.cr,P.cr).s}、CPA ${wow(L.cpa,P.cpa,true).s}）。付費佔上週流量 ${paidShare.toFixed(0)}%（高度依賴付費）。`;
 
