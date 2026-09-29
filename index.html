@@ -85,9 +85,6 @@
 <h2>各品類廣告花費（上週・vs 上上週）</h2>
 <div class="panel"><div id="catbars"></div></div>
 
-<h2>上週廣告投放成效（僅上週資料）</h2>
-<div class="grid" id="perfcards"></div>
-
 <div style="border-top:3px solid var(--ink);opacity:.85;margin:44px 0 0"></div>
 <div style="text-align:center;color:var(--sub);font-size:12px;letter-spacing:.1em;margin:6px 0 0">— 下一段：10 月展望 —</div>
 
@@ -173,13 +170,6 @@ bars(document.getElementById('chart'),daily,4,20,'#c7d2de','#0f5faf');
 
 // 品類廣告 上週 + WoW
 (function(){const top=CAT_WEEK.slice(0,10),max=Math.max(...top.map(r=>r[1]));document.getElementById('catbars').innerHTML=top.map(([nm,l,p])=>{const w=wow(l,p,true);return `<div class="catrow"><div class="nm">${nm}</div><div class="track"><i style="width:${(l/max*100).toFixed(1)}%"></i></div><div class="val"><b>${money(l)}</b> <span class="w-${w.cls==='up'?'up':(w.cls==='down'?'down':'')}">${w.s}</span></div></div>`;}).join('');})();
-
-// 上週投放成效
-document.getElementById('perfcards').innerHTML=`
- <div class="card"><div class="k">曝光</div><div class="v">${nf(PERF.imp)}</div></div>
- <div class="card"><div class="k">點擊</div><div class="v">${nf(PERF.clk)}</div><div class="prev">CTR ${(PERF.clk/PERF.imp*100).toFixed(2)}%</div></div>
- <div class="card"><div class="k">觀看</div><div class="v">${nf(PERF.view)}</div></div>
- <div class="card"><div class="k">觀看/曝光</div><div class="v">${(PERF.view/PERF.imp*100).toFixed(1)}%</div></div>`;
 
 // 10月目標（D69:L76）
 const OCT=[["滴雞精",4941980,0.248,6167591,0.36,6721093,"高"],["鱸魚精",1812019,0.28,2319384,0.40,2536827,"中"],["寶寶燉飯",2774968,0.19,3302212,0.30,3607458,"中"],["寶寶粥&其他",5235412,-0.02,5130704,0.07,5601891,"高·破口"],["兒童保健",1510433,0.09,1646372,0.18,1782311,"中"],["蔓越莓",330575,-0.13,287600,-0.05,314046,"低"],["調理",352924,0.03,363512,0.13,398804,"中"]];
