@@ -93,23 +93,6 @@
 <h2>Meta 各品類廣告花費（本週）</h2>
 <div class="panel"><div id="catbars"></div><div class="mnote" style="margin-top:8px" id="catnote"></div></div>
 
-<div style="border-top:3px solid var(--ink);opacity:.85;margin:44px 0 0"></div>
-<div style="text-align:center;color:var(--sub);font-size:12px;letter-spacing:.1em;margin:6px 0 0">— 本月（10 月）目標與風險盤查 —</div>
-
-<h2>10 月業績目標（保守 +10% ／ 積極 +20%）＋ 風險盤查</h2>
-<div class="grid" id="octtot" style="grid-template-columns:repeat(3,1fr)"></div>
-<div class="panel" id="octtable"></div>
-<div class="risk" id="octrisk"></div>
-
-<h2>本月專案（饅頭）：IG 內容牆</h2>
-<div class="panel" style="border-left:4px solid var(--accent)">
-  <div style="font-size:15px;line-height:1.9">
-    • <b>目標</b>：增強「瀏覽後 → 加購物車」這段的轉換率。<br>
-    • <b>方法</b>：先做 A/B test，測試一個月。<br>
-    • <b>延伸</b>：效果佳 → 輔助雙11進站流量，<b>預期降低 CPA</b>。
-  </div>
-</div>
-
 <footer id="foot"></footer>
 
 <script>
@@ -163,6 +146,7 @@ const sl=(a)=>[a.slice(a.length-7),a.slice(a.length-14,a.length-7)]; // [本週(
 const nf=n=>Math.round(n).toLocaleString('en-US');
 const money=n=>'$'+nf(n);
 const wow=(c,p,inv=false)=>{const d=(c-p)/p*100;const up=d>=0;const cls=Math.abs(d)<0.5?'flat':((up!==inv)?'up':'down');return {cls,s:(d>=0?'+':'')+d.toFixed(1)+'%'};};
+const pp=(c,p)=>{const d=(c-p)*100;const cls=Math.abs(d)<0.05?'flat':(d>=0?'up':'down');return {cls,s:(d>=0?'+':'')+d.toFixed(2)+'pp'};}; // 轉換率用百分點
 
 // 營運 KPI
 const [lw,pw]=sl(daily);
@@ -172,19 +156,19 @@ document.getElementById('kpis').innerHTML=[
  ['營業額',money(L.rev),wow(L.rev,P.rev),money(P.rev),wow(L.rev,LYw.rev),money(LYw.rev)],
  ['訂單數',nf(L.ord),wow(L.ord,P.ord),nf(P.ord),wow(L.ord,LYw.ord),nf(LYw.ord)],
  ['不重複流量',nf(L.uv),wow(L.uv,P.uv),nf(P.uv),wow(L.uv,LYw.uv),nf(LYw.uv)],
- ['轉換率',(L.cr*100).toFixed(2)+'%',wow(L.cr,P.cr),(P.cr*100).toFixed(2)+'%',wow(L.cr,LYw.cr),(LYw.cr*100).toFixed(2)+'%'],
+ ['轉換率',(L.cr*100).toFixed(2)+'%',pp(L.cr,P.cr),(P.cr*100).toFixed(2)+'%',pp(L.cr,LYw.cr),(LYw.cr*100).toFixed(2)+'%'],
  ['客單價',money(L.aov),wow(L.aov,P.aov),money(P.aov),wow(L.aov,LYw.aov),money(LYw.aov)],
  ['廣告費',money(L.ad),wow(L.ad,P.ad,true),money(P.ad),wow(L.ad,LYw.ad,true),money(LYw.ad)],
  ['ROAS',L.roas.toFixed(2),wow(L.roas,P.roas),P.roas.toFixed(2),wow(L.roas,LYw.roas),LYw.roas.toFixed(2)],
  ['CPA',money(L.cpa),wow(L.cpa,P.cpa,true),money(P.cpa),wow(L.cpa,LYw.cpa,true),money(LYw.cpa)]
 ].map(([k,v,w,p,y,ly])=>`<div class="card"><div class="k">${k}</div><div class="v">${v}</div><div class="wow ${w.cls}">WoW ${w.s}</div><div class="prev">上週 ${p}</div><div class="prev" style="margin-top:3px">YoY <span class="yoy ${y.cls}">${y.s}</span>・去年 ${ly}</div></div>`).join('');
-document.getElementById('banner').innerHTML=`本週（9/28–10/4）營業額 <b>${money(L.rev)}</b>（WoW <b>${wow(L.rev,P.rev).s}</b>、YoY <b>${wow(L.rev,LYw.rev).s}</b>）。亮點＝<b>廣告效率強勢回升</b>：廣告費 WoW <b>${wow(L.ad,P.ad).s}</b>、訂單 <b>${wow(L.ord,P.ord).s}</b>，ROAS <b>${P.roas.toFixed(1)}→${L.roas.toFixed(1)}</b>、CPA <b>${money(P.cpa)}→${money(L.cpa)}</b>。上週中秋尾段過度加碼、轉不動；本週廣告收手後效率回正。流量 WoW ${wow(L.uv,P.uv).s}（中秋 9/25 後自然回落）、客單 ${wow(L.aov,P.aov).s}，但轉換率 <b>${wow(L.cr,P.cr).s}</b> 完全補回。`;
+document.getElementById('banner').innerHTML=`<b>本週營業額 ${money(L.rev)}</b>　WoW <b>${wow(L.rev,P.rev).s}</b>｜YoY <b>${wow(L.rev,LYw.rev).s}</b><br><b>一句話：上週中秋尾段過度加碼、轉不動；本週廣告收手仍逆勢成長。</b>廣告 ${wow(L.ad,P.ad).s}、訂單 ${wow(L.ord,P.ord).s}、ROAS ${P.roas.toFixed(1)}→${L.roas.toFixed(1)}、CPA ${money(P.cpa)}→${money(L.cpa)}。`;
 
 // 週對比 bars
 const wkData=[['本週（9/28–10/4）',L.rev,'#0f5faf'],['上週（9/21–27）',P.rev,'#9aa6b2'],['去年同週（2025/9/28–10/4）',LYw.rev,'#e0993a']];
 const wmax=Math.max(...wkData.map(r=>r[1]));
 document.getElementById('wkbars').innerHTML=wkData.map(([nm,v,c])=>`<div class="catrow"><div class="nm" style="width:190px">${nm}</div><div class="track"><i style="width:${(v/wmax*100).toFixed(1)}%;background:${c}"></i></div><div class="val"><b>${money(v)}</b></div></div>`).join('');
-document.getElementById('wknote').innerHTML=`vs 上週 <b>${wow(L.rev,P.rev).s}</b>（WoW）、vs 去年同週 <b>${wow(L.rev,LYw.rev).s}</b>（YoY）。<b>口徑提醒</b>：去年同週為中秋前段衝刺（2025 中秋 10/6），流量基期偏高，故 YoY 流量 ${wow(L.uv,LYw.uv).s} 多屬節奏差異；惟轉換率 YoY <b>${wow(L.cr,LYw.cr).s}</b>、ROAS YoY <b>${wow(L.roas,LYw.roas).s}</b>、訂單 YoY <b>${wow(L.ord,LYw.ord).s}</b>，成交與廣告效率均優於去年。`;
+document.getElementById('wknote').innerHTML=`WoW <b>${wow(L.rev,P.rev).s}</b>｜YoY <b>${wow(L.rev,LYw.rev).s}</b><br><b>YoY 口徑提醒：</b>去年同週是中秋前段衝刺（2025 中秋 10/6）、流量基期高，故流量 YoY ${wow(L.uv,LYw.uv).s} 屬節奏差異。<br><b>真正看效率，全優於去年：</b>轉換率 <b>${pp(L.cr,LYw.cr).s}</b>、ROAS <b>${wow(L.roas,LYw.roas).s}</b>、訂單 <b>${wow(L.ord,LYw.ord).s}</b>。`;
 
 // 月目標
 const pct=MONTH_CUM/MONTH_TARGET*100;
@@ -200,13 +184,14 @@ const [alw,apw]=sl(DAILY_AD);
 const adT=w=>({fb:sum(w,1),g:sum(w,2),tot:sum(w,1)+sum(w,2)});
 const AL=adT(alw),AP=adT(apw);
 const kddrRoas=(KDDR.fbVal+KDDR.ggVal)/AL.tot;
+const [glw2]=sl(GA4_DAILY);const paidShare=sum(glw2,1)/(sum(glw2,1)+sum(glw2,2)+sum(glw2,3))*100;
 const adCard=arr=>arr.map(([k,v,w,p])=>`<div class="card"><div class="k">${k}</div><div class="v">${v}</div><div class="wow ${w.cls}">WoW ${w.s}</div><div class="prev">上週 ${p}</div></div>`).join('');
 document.getElementById('adspend').innerHTML=adCard([
  ['總廣告費（KDDR）',money(AL.tot),wow(AL.tot,AP.tot,true),money(AP.tot)],
  ['Facebook 花費',money(AL.fb),wow(AL.fb,AP.fb,true),money(AP.fb)],
  ['Google 花費',money(AL.g),wow(AL.g,AP.g,true),money(AP.g)]
 ]);
-document.getElementById('adinsight').innerHTML=`本週總廣告費 <b>${money(AL.tot)}</b>（WoW <b>${wow(AL.tot,AP.tot).s}</b>）——收手幾乎全在 <b>FB（${wow(AL.fb,AP.fb).s}）</b>，Google 僅 <b>${wow(AL.g,AP.g).s}</b>。上週中秋尾段 FB 大量加碼、轉不動；本週把 FB 砍回常態，Google（Pmax／品牌搜尋為主、平台 ROAS 8.7）維持。KDDR 平台回報 ROAS <b>${kddrRoas.toFixed(2)}</b>（FB 6.83／Google 8.72）；對照營運 KPI 的業績報表實際 ROAS <b>${L.roas.toFixed(2)}</b>——差異＝平台含瀏覽後／歸因較寬。`;
+document.getElementById('adinsight').innerHTML=`<b>關鍵：廣告 ${wow(AL.tot,AP.tot).s}，收手幾乎全在 FB。</b><br>• FB <b>${wow(AL.fb,AP.fb).s}</b>、Google 僅 <b>${wow(AL.g,AP.g).s}</b>——上週中秋尾段 FB 爆量轉不動，本週砍回常態；Google（Pmax／品牌搜尋、ROAS 8.7）維持。<br>• 兩套 ROAS 口徑：KDDR 平台回報 <b>${kddrRoas.toFixed(2)}</b>（FB 6.83／Google 8.72，含瀏覽後）　vs　業績報表實際 <b>${L.roas.toFixed(2)}</b>。<br>• GA4 付費 sessions 佔 <b>${paidShare.toFixed(0)}%</b>，仍高度依賴付費導流。`;
 
 // charts
 function bars(el,data,vi,hiFrom,color,hi,W){W=W||1120;const H=210,padB=22,padT=8,n=data.length,max=Math.max(...data.map(r=>r[vi]));const bw=(W-16)/n,gap=Math.min(6,bw*0.22);let s='';data.forEach((r,i)=>{const x=8+i*bw,bh=(r[vi]/max)*(H-padT-padB),y=H-padB-bh,c=(i>=hiFrom)?hi:color;s+=`<rect x="${(x+gap/2).toFixed(1)}" y="${y.toFixed(1)}" width="${(bw-gap).toFixed(1)}" height="${bh.toFixed(1)}" rx="2" fill="${c}"><title>${r[0]}: ${nf(r[vi])}</title></rect>`;if(i%7===0||i===n-1)s+=`<text x="${(x+bw/2).toFixed(1)}" y="${H-6}" font-size="11" fill="#6b7686" text-anchor="middle">${r[0]}</text>`;});el.innerHTML=`<svg viewBox="0 0 ${W} ${H}" role="img">${s}</svg>`;}
@@ -220,25 +205,7 @@ bars(document.getElementById('chart'),daily,4,daily.length-7,'#c7d2de','#0f5faf'
 
 // Meta 品類廣告花費
 (function(){const max=Math.max(...CAT_META.map(r=>r[1]));const tot=289641;document.getElementById('catbars').innerHTML=CAT_META.map(([nm,v])=>`<div class="catrow"><div class="nm">${nm}</div><div class="track"><i style="width:${(v/max*100).toFixed(1)}%"></i></div><div class="val"><b>${money(v)}</b> <span style="color:#6b7686">${(v/tot*100).toFixed(1)}%</span></div></div>`).join('');})();
-const [glw2]=sl(GA4_DAILY);const gpaid=sum(glw2,1),gtot=sum(glw2,1)+sum(glw2,2)+sum(glw2,3);
-document.getElementById('catnote').innerHTML=`口徑：KDDR Meta 素材花費合計 $289,641（Google $291,989 另計，以 Pmax／品牌搜尋為主）。本週 GA4 付費 sessions 佔比 <b>${(gpaid/gtot*100).toFixed(0)}%</b>（仍高度依賴付費導流）。`;
-
-// 10月目標（D69:L76）
-const OCT=[["滴雞精",4941980,0.248,6167591,0.36,6721093,"高"],["鱸魚精",1812019,0.28,2319384,0.40,2536827,"中"],["寶寶燉飯",2774968,0.19,3302212,0.30,3607458,"中"],["寶寶粥&其他",5235412,-0.02,5130704,0.07,5601891,"高·破口"],["兒童保健",1510433,0.09,1646372,0.18,1782311,"中"],["蔓越莓",330575,-0.13,287600,-0.05,314046,"低"],["調理",352924,0.03,363512,0.13,398804,"中"]];
-const octE=16958311, octH=19217375, octJ=20962430;
-const pc=v=>(v>=0?'+':'')+Math.round(v*100)+'%';
-const rc={'高':'#c0392b','高·破口':'#c0392b','中':'#9a6a00','低':'#137a4b'};
-document.getElementById('octtot').innerHTML=`
- <div class="card"><div class="k">去年 10 月合計</div><div class="v">${money(octE)}</div></div>
- <div class="card"><div class="k">保守目標（+10%）</div><div class="v">${money(octH)}</div><div class="prev">官網後台×1.1</div></div>
- <div class="card"><div class="k">積極目標（+20%）</div><div class="v">${money(octJ)}</div><div class="prev">官網後台×1.2</div></div>`;
-document.getElementById('octtable').innerHTML=`<table class="oct"><thead><tr><th>品類</th><th>去年10月</th><th>保守%</th><th>保守目標</th><th>積極%</th><th>積極目標</th><th>風險</th></tr></thead><tbody>${OCT.map(([nm,e,g,h,i,j,rk])=>`<tr><td>${nm}</td><td>${money(e)}</td><td>${pc(g)}</td><td>${money(h)}</td><td>${pc(i)}</td><td>${money(j)}</td><td style="color:${rc[rk]||'#6b7686'};font-weight:600">${rk}</td></tr>`).join('')}<tr class="tot"><td>合計</td><td>${money(octE)}</td><td>—</td><td>${money(octH)}</td><td>—</td><td>${money(octJ)}</td><td></td></tr></tbody></table>`;
-document.getElementById('octrisk').innerHTML=`<b>風險盤查（現況戰況）</b><br>
-• <b>基期問題</b>：去年 10 月是「十週年（一次性）＋中秋禮盒」大檔、基期結構性偏高；今年為常態檔期 → <b>保守 +10% 已具挑戰、積極 +20% 偏樂觀</b>。<br>
-• <b>最大破口：寶寶粥&其他</b>（權重 31%）：趨勢 −18% 卻需逆勢翻正（保守 −2%／積極 +7%），補不回即拖垮總額。<br>
-• <b>滴雞精</b>積極 +36% 遠高於趨勢；<b>兒童保健</b>去年基期高，但今年 YOYO 聯名延續有撐。<br>
-• <b>真正成長引擎在 11 月雙11</b>；10 月定位為守＋蓄水獲新客。<br>
-• 實際官網案型（滿額贈／加購／檔期機制）Ann 介紹。`;
+document.getElementById('catnote').innerHTML=`口徑：KDDR Meta 素材花費合計 $289,641；Google $291,989 另計（以 Pmax／品牌搜尋為主，無逐素材品類歸戶）。`;
 
 document.getElementById('foot').innerHTML='資料來源：業績報表（Winnie 建立）2026＋2025｜9月／10月分頁；廣告＝KDDR BI（FB/Google・素材）；流量／渠道＝GA4｜更新：2026-10-06';
 </script>
