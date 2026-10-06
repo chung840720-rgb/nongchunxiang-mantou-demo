@@ -199,7 +199,7 @@ document.getElementById('gmv').innerHTML=[
  ['× 客單價',money(L.aov),wow(L.aov,P.aov),money(P.aov),wow(L.aov,LYw.aov),money(LYw.aov)],
  ['營業額（業績報表實際）',money(L.rev),wow(L.rev,P.rev),money(P.rev),wow(L.rev,LYw.rev),money(LYw.rev)]
 ].map((a,i)=>cardFull(a,i===3)).join('');
-document.getElementById('gmvtake').innerHTML=`<b>拆解：本週 GMV +5.0%（YoY −5.2%），完全靠轉換率撐。</b>流量 WoW ${wow(L.uv,P.uv).s}（中秋 9/25 後回落）、客單 ${wow(L.aov,P.aov).s} 雙降，但轉換率 <b>${pp(L.cr,P.cr).s}</b>（YoY ${pp(L.cr,LYw.cr).s}）全部補回——<b>轉換率是本週唯一的成長引擎</b>，也是後續（IG 內容牆、訪客結帳）要守住的槓桿。<br><span style="font-size:12px;color:var(--sub)">註：轉換率、客單皆取<b>每日值的平均</b>（業績報表「加總後平均」口徑，非 sum訂單÷sum流量）；故三者相乘 ≈ 營業額（非精確恆等），<b>營業額以業績報表為準</b>。</span><br>→ <b>下一題</b>：轉換率升是「誰」貢獻的？看新舊客。`;
+document.getElementById('gmvtake').innerHTML=`<b>GMV +5.0%（YoY −5.2%）</b>：流量 ${wow(L.uv,P.uv).s}、客單 ${wow(L.aov,P.aov).s} 雙降，靠轉換率 <b>${pp(L.cr,P.cr).s}</b> 補回。`;
 
 // 總業績 & 達標
 const pctWk=L.rev/WK_TARGET*100;
@@ -213,7 +213,7 @@ document.getElementById('mtgt').textContent=money(MONTH_TARGET);
 document.getElementById('mly').textContent=money(MONTH_LY);
 document.getElementById('mpctlabel').innerHTML=`月達成率 <b>${pct.toFixed(1)}%</b>　（月進度 ${(DAYS_ELAPSED/MONTH_DAYS*100).toFixed(0)}%，${DAYS_ELAPSED}/${MONTH_DAYS} 天）`;
 document.getElementById('mbar').style.width=Math.min(100,pct)+'%';
-document.getElementById('mnote2').innerHTML=`10 月目標 ${money(MONTH_TARGET)}（YoY vs 去年 ${wow(MONTH_TARGET,MONTH_LY).s}）為<b>雙11背載</b>：末兩週（10/19–31）合計佔 50%，月初進度偏低屬正常。`;
+document.getElementById('mnote2').innerHTML=`10 月目標 ${money(MONTH_TARGET)}（YoY ${wow(MONTH_TARGET,MONTH_LY).s}）；雙11背載，末兩週佔 50%。`;
 
 // 核心效率 KPI
 document.getElementById('kpis').innerHTML=[
@@ -228,15 +228,15 @@ const cell=(v,w,cls)=>`${v}<br><span class="sm ${cls}">${w}</span>`;
 const srow=(lab,o,share)=>`<tr><td><b>${lab}</b></td><td>${cell(nf(o.cust[0]),o.cust[1],o.cust[2])}</td><td>${cell(o.gmv[0],o.gmv[1],o.gmv[2])}</td><td>${cell(o.aov[0],o.aov[1],o.aov[2])}</td><td>${share}%</td></tr>`;
 document.getElementById('segtbl').innerHTML=`<thead><tr><th>區隔</th><th>消費顧客數</th><th>成交額</th><th>客單（平均消費）</th><th>佔成交</th></tr></thead><tbody>
  ${srow('新客',SL_NO.new,SL_NO.newShare)}${srow('舊客',SL_NO.ret,SL_NO.retShare)}</tbody>`;
-document.getElementById('segnote').innerHTML=`Shopline 消費顧客分析（網店・成交口徑，總成交 ${SL_NO.total}，與業績報表營業額略有差異）。新客回購率 <b>${SL_NO.repurch.rate}</b>（首購 ${SL_NO.repurch.first}、回購僅 ${SL_NO.repurch.repeat}）。`;
-document.getElementById('segtake').innerHTML=`<b>辨偽後的真相：本週靠「舊客的量」撐，不是體質變好。</b>舊客成交 <b>+15%</b>，但靠顧客數 <b>+22%</b>、客單 <b>−5%</b>（量多、單價降）——高度疑似 10/1 起<b>會員加碼回饋購物金</b>催出來的；新客成交其實 <b>−5%</b>（客單 <b>−15%</b> 被促銷拉低），<b>新客回購率僅 1.6%</b>（485 首購只有 8 人回購）。<br>→ <b>下一題</b>：新客留不住、轉不動，卡在哪？拆進站漏斗。`;
+document.getElementById('segnote').innerHTML=`Shopline 網店消費顧客分析；新客回購率 <b>${SL_NO.repurch.rate}</b>（首購 ${SL_NO.repurch.first}／回購 ${SL_NO.repurch.repeat}）。`;
+document.getElementById('segtake').innerHTML=`<b>靠舊客的量撐</b>：舊客成交 +15%（人數 +22%、客單 −5%，疑購物金帶動）；新客成交 −5%、回購率僅 1.6%。`;
 
 // 漏斗
 document.getElementById('fnltbl').innerHTML=`<thead><tr><th>階段</th><th>新客</th><th>舊客</th></tr></thead><tbody>
  ${FUNNEL.map(([s,n,r])=>`<tr><td>${s}</td><td>${n}%</td><td>${r}%</td></tr>`).join('')}</tbody>`;
 document.getElementById('steptbl').innerHTML=`<thead><tr><th>相鄰轉換</th><th>新客</th><th>舊客</th><th>差距</th></tr></thead><tbody>
  ${STEP.map(([s,n,r])=>{const gap=(n-r).toFixed(1);const bad=s.includes('加購 → 進結帳');return `<tr${bad?' style="background:#fdf0ee"':''}><td>${bad?'<b>'+s+'</b>':s}</td><td>${n}%</td><td>${r}%</td><td class="sm ${n-r>=0?'up':'down'}">${gap>=0?'+':''}${gap}pp</td></tr>`;}).join('')}</tbody>`;
-document.getElementById('leak').innerHTML=`<b>最大破口＝加購 → 進結帳：新客僅 34.5%，舊客 56.4%（差 −22pp）。</b>新客把商品加進購物車後，有 2/3 沒走到結帳——卡點就是<b>加購後強制註冊／登入的「註冊牆」</b>（一旦進結帳，新客 89.5% 會完成購買，這段反而不是問題）。對策：①IG 內容牆養「看→加購」意願　②測<b>訪客結帳</b>降註冊牆　③購物金綁定誘因前置到加購頁。`;
+document.getElementById('leak').innerHTML=`<b>最大破口＝加購 → 進結帳：新客 34.5% vs 舊客 56.4%（−22pp）＝註冊牆</b>（進結帳後新客 89.5% 會買）。`;
 
 // 流量結構 自然 vs 付費
 const F=FLOW.cur,FP=FLOW.prev,Ftot=F.paid+F.org+F.oth;
@@ -245,7 +245,7 @@ document.getElementById('flow').innerHTML=
  flowCard('付費 sessions',F.paid,wow(F.paid,FP.paid),FP.paid)+
  flowCard('自然 sessions',F.org,wow(F.org,FP.org),FP.org)+
  flowCard('其他 sessions',F.oth,wow(F.oth,FP.oth),FP.oth);
-document.getElementById('flowtake').innerHTML=`<b>廣告收手砍的是付費流量（${wow(F.paid,FP.paid).s}），但自然流量逆勢 ${wow(F.org,FP.org).s}。</b>付費仍佔 <b>${(F.paid/Ftot*100).toFixed(0)}%</b>（高度依賴），不過「少花錢、自然量還漲、轉換率更好」是體質往正向走的訊號——自然流量的增量切角值得加碼。<br>→ <b>下一題</b>：自然的增量，具體從哪些字長出來？看 GSC。`;
+document.getElementById('flowtake').innerHTML=`付費流量 <b>${wow(F.paid,FP.paid).s}</b>、自然逆勢 <b>${wow(F.org,FP.org).s}</b>；付費仍佔 <b>${(F.paid/Ftot*100).toFixed(0)}%</b>。`;
 
 // 廣告總表 KDDR
 const [alw,apw]=sl(DAILY_AD);
@@ -258,18 +258,18 @@ document.getElementById('adspend').innerHTML=adCard([
  ['Facebook 花費',money(AL.fb),wow(AL.fb,AP.fb,true),money(AP.fb)],
  ['Google 花費',money(AL.g),wow(AL.g,AP.g,true),money(AP.g)]
 ]);
-document.getElementById('adinsight').innerHTML=`<b>關鍵：廣告 ${wow(AL.tot,AP.tot).s}，收手幾乎全在 FB。</b><br>• FB <b>${wow(AL.fb,AP.fb).s}</b>、Google 僅 <b>${wow(AL.g,AP.g).s}</b>——上週中秋尾段 FB 爆量轉不動，本週砍回常態；Google（Pmax／品牌搜尋、ROAS 8.7）維持。<br>• 兩套 ROAS 口徑：KDDR 平台回報 <b>${kddrRoas.toFixed(2)}</b>（FB 6.83／Google 8.72，含瀏覽後）　vs　業績報表實際 <b>${L.roas.toFixed(2)}</b>。`;
+document.getElementById('adinsight').innerHTML=`<b>廣告 ${wow(AL.tot,AP.tot).s}，收手幾乎全在 FB</b>（FB ${wow(AL.fb,AP.fb).s}、Google ${wow(AL.g,AP.g).s}）。KDDR 平台 ROAS ${kddrRoas.toFixed(2)}／業績報表 ROAS ${L.roas.toFixed(2)}。`;
 
 // Meta 品類
 (function(){const max=Math.max(...CAT_META.map(r=>r[1]));const tot=289641;document.getElementById('catbars').innerHTML=CAT_META.map(([nm,v])=>`<div class="catrow"><div class="nm">${nm}</div><div class="track"><i style="width:${(v/max*100).toFixed(1)}%"></i></div><div class="val"><b>${money(v)}</b> <span style="color:#6b7686">${(v/tot*100).toFixed(1)}%</span></div></div>`).join('');})();
-document.getElementById('catnote').innerHTML=`口徑：KDDR Meta 素材花費合計 $289,641；Google $291,989 另計（以 Pmax／品牌搜尋為主，無逐素材品類歸戶）。`;
+document.getElementById('catnote').innerHTML=`Meta 素材花費 $289,641（Google $291,989 另計）。`;
 
 // GSC
 document.getElementById('gscimp').innerHTML=`<thead><tr><th>關鍵字</th><th>Δ曝光</th><th>排名</th></tr></thead><tbody>
  ${GSC_IMP.map(([k,d,pos])=>`<tr><td>${k}</td><td class="sm up">+${d}</td><td>${pos}</td></tr>`).join('')}</tbody>`;
 document.getElementById('gscclk').innerHTML=`<thead><tr><th>關鍵字</th><th>Δ點擊</th><th>排名</th><th>CTR</th></tr></thead><tbody>
  ${GSC_CLK.map(([k,d,pos,ctr])=>`<tr><td>${k}</td><td class="sm up">+${d}</td><td>${pos}</td><td>${ctr}%</td></tr>`).join('')}</tbody>`;
-document.getElementById('gsctake').innerHTML=`<b>給增量組的切角：</b><br>• <b>產後／小產調理字</b>（小產／流產／人工流產後吃什麼、自然產剛生完）排名已在 <b>1–2 名</b>、曝光暴增 → 鱸魚精／滴雞精「產後調理」內容深化、可做專題落地頁。<br>• <b>副食品字</b>（嬰兒副食品、寶寶粥、寶寶餅乾、寶寶肉鬆）穩漲 → 寶寶粥內容牆切角。<br>• <b>「滴雞精推薦」</b>排名 6.7、CTR 僅 1.9% → SEO 標題／內容優化拉排名的機會字。<br>• 運動營養字（bcaa、支鏈胺基酸）曝光漲但排名 8+、無對應產品線 → 優先度低。`;
+document.getElementById('gsctake').innerHTML=`<b>給增量組：</b>① 產後／小產調理字（排名 1–2、曝光暴增）→ 鱸魚精／滴雞精內容　② 副食品字穩漲 → 寶寶粥內容牆　③「滴雞精推薦」排名 6.7、CTR 1.9% → SEO 拉排名。`;
 
 document.getElementById('foot').innerHTML='資料來源：業績報表（Winnie 建立）2026＋2025｜9月／10月；廣告＝KDDR BI（FB/Google・素材）；流量／渠道／新舊客／漏斗＝GA4；關鍵字＝GSC｜更新：2026-10-06';
 </script>
