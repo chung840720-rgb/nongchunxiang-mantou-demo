@@ -84,9 +84,9 @@
 <h2>核心效率指標（本週 vs 上週・YoY 去年同週）</h2>
 <div class="grid" id="kpis" style="grid-template-columns:repeat(4,1fr)"></div>
 
-<h2><span class="tag ppl">人</span>Q2　成長從哪來？新客 vs 舊客（GA4 口徑）</h2>
+<h2><span class="tag ppl">人</span>Q2　成長從哪來？新客 vs 舊客（Shopline 實際）</h2>
 <div class="panel"><table class="dt" id="segtbl"></table>
-  <div class="mnote" style="margin-top:6px">GA4 口徑（成交／營收為 GA4 統計，與 Shopline 實際有落差，看<b>新舊客相對差異與趨勢</b>）。</div></div>
+  <div class="mnote" style="margin-top:6px" id="segnote"></div></div>
 <div class="take" id="segtake"></div>
 
 <h2><span class="tag ppl">人</span>Q3　新客卡在哪？進站漏斗 × 新舊客（破口＝加購→結帳）</h2>
@@ -163,8 +163,11 @@ const MONTH_TARGET=20964764,MONTH_CUM=1626002,MONTH_DAYS=31,DAYS_ELAPSED=4,MONTH
 
 // GA4 流量結構（sessions）
 const FLOW={cur:{paid:27490,org:11529,oth:7330},prev:{paid:41511,org:10385,oth:6893}};
-// GA4 新舊客 [sessions, 成交, 營收]
-const NO={cur:{n:[29747,449,1108985],r:[12986,742,2016839]},prev:{n:[40923,380,958378],r:[12533,584,1835216]}};
+// Shopline 消費顧客分析（網店 9/28-10/4 vs 上週）：[值, WoW字串, 漲跌cls]
+const SL_NO={
+ new:{cust:[485,'+10%','up'], gmv:['$1,151,312','−5%','down'], aov:['$2,152','−15%','down']},
+ ret:{cust:[918,'+22%','up'], gmv:['$2,976,292','+15%','up'], aov:['$3,015','−5%','down']},
+ total:'$4,127,604', newShare:28, retShare:72, repurch:{rate:'1.6%',first:484,repeat:8}};
 // GA4 進站漏斗（本週）[階段, 新客%進站, 舊客%進站]
 const FUNNEL=[["看商品 view_item",27.8,38.8],["加入購物車 add_to_cart",4.9,11.9],["進入結帳 begin_checkout",1.7,6.7],["完成購買 purchase",1.5,5.9]];
 const STEP=[["進站 → 看商品",27.8,38.8],["看商品 → 加購",17.7,30.6],["加購 → 進結帳",34.5,56.4],["進結帳 → 購買",89.5,87.2]];
@@ -211,7 +214,7 @@ document.getElementById('mbar').style.width=Math.min(100,pct)+'%';
 document.getElementById('mnote2').innerHTML=`10 月目標 ${money(MONTH_TARGET)}（YoY vs 去年 ${wow(MONTH_TARGET,MONTH_LY).s}）為<b>雙11背載</b>：末兩週（10/19–31）合計佔 50%，月初進度偏低屬正常。`;
 
 // 先辨偽節點
-document.getElementById('verify').innerHTML=`<b>別急著慶祝 +5%——先過三關：</b><br>• <b>沒達標</b>：週達成僅 ${pctWk.toFixed(0)}%（目標 ${money(WK_TARGET)}、缺口 ${money(WK_TARGET-L.rev)}）。<br>• <b>YoY 仍 ${wow(L.rev,LYw.rev).s}</b>：營收仍低於去年同週。<br>• <b>confounder（最關鍵）</b>：10/1–19 有「會員加碼回饋」購物金活動（發放約 $800k）——下方<b>舊客本週的跳升，要先扣掉活動效果</b>才能算體質。<br>• <b>口徑</b>：新舊客／漏斗為 GA4 統計，成交與 Shopline 實際有落差，看相對趨勢。<br>→ 所以真正要問的不是「有沒有成長」，而是 <b>「成長從哪來、能不能複製」</b>——以下依此追問。`;
+document.getElementById('verify').innerHTML=`<b>別急著慶祝 +5%——先過三關：</b><br>• <b>沒達標</b>：週達成僅 ${pctWk.toFixed(0)}%（目標 ${money(WK_TARGET)}、缺口 ${money(WK_TARGET-L.rev)}）。<br>• <b>YoY 仍 ${wow(L.rev,LYw.rev).s}</b>：營收仍低於去年同週。<br>• <b>confounder（最關鍵）</b>：10/1–19 有「會員加碼回饋」購物金活動（發放約 $800k）——下方<b>舊客本週的跳升，要先扣掉活動效果</b>才能算體質。<br>• <b>口徑</b>：新舊客＝Shopline 實際；漏斗／流量結構＝GA4（兩者口徑不同，別混加）。<br>→ 所以真正要問的不是「有沒有成長」，而是 <b>「成長從哪來、能不能複製」</b>——以下依此追問。`;
 
 // 核心效率 KPI
 document.getElementById('kpis').innerHTML=[
@@ -221,16 +224,13 @@ document.getElementById('kpis').innerHTML=[
  ['CPA',money(L.cpa),wow(L.cpa,P.cpa,true),money(P.cpa),wow(L.cpa,LYw.cpa,true),money(LYw.cpa)]
 ].map(a=>cardFull(a)).join('');
 
-// 新舊客表
-const seg=(lab,c,p)=>{const[s,pp2,rev]=c,[ps,pp3,prev_rev]=p;const cr=pp2/s,pcr=pp3/ps,aov=rev/pp2,paov=prev_rev/pp3;
- return `<tr><td><b>${lab}</b></td>
-  <td>${nf(s)}<br><span class="sm ${wow(s,ps).cls}">${wow(s,ps).s}</span></td>
-  <td>${(cr*100).toFixed(2)}%<br><span class="sm ${pp(cr,pcr).cls}">${pp(cr,pcr).s}</span></td>
-  <td>${money(aov)}<br><span class="sm ${wow(aov,paov).cls}">${wow(aov,paov).s}</span></td>
-  <td>${nf(pp2)}<br><span class="sm ${wow(pp2,pp3).cls}">${wow(pp2,pp3).s}</span></td></tr>`;};
-document.getElementById('segtbl').innerHTML=`<thead><tr><th>區隔</th><th>流量 sessions</th><th>轉換率</th><th>客單</th><th>成交</th></tr></thead><tbody>
- ${seg('新客',NO.cur.n,NO.prev.n)}${seg('舊客',NO.cur.r,NO.prev.r)}</tbody>`;
-document.getElementById('segtake').innerHTML=`<b>廣告收手主要砍「新客流量」（−27%），但換來更好的質。</b>新客轉換 0.93%→<b>1.51%</b>（+0.58pp）、成交 <b>+18%</b>；舊客轉換 4.66%→<b>5.71%</b>（+1.05pp）、成交 <b>+27%</b>。舊客轉換率是新客的 <b>3.8 倍</b>——本週靠舊客撐成交，新客留存＋轉化是長線重點。<br>⚠ <b>辨偽</b>：舊客成交 +27% 有一部分是 10/1 起<b>會員加碼回饋購物金</b>帶的，非純體質，需隔離。<br>→ <b>下一題</b>：新客為何這麼弱？拆進站漏斗。`;
+// 新舊客表（Shopline 實際）
+const cell=(v,w,cls)=>`${v}<br><span class="sm ${cls}">${w}</span>`;
+const srow=(lab,o,share)=>`<tr><td><b>${lab}</b></td><td>${cell(nf(o.cust[0]),o.cust[1],o.cust[2])}</td><td>${cell(o.gmv[0],o.gmv[1],o.gmv[2])}</td><td>${cell(o.aov[0],o.aov[1],o.aov[2])}</td><td>${share}%</td></tr>`;
+document.getElementById('segtbl').innerHTML=`<thead><tr><th>區隔</th><th>消費顧客數</th><th>成交額</th><th>客單（平均消費）</th><th>佔成交</th></tr></thead><tbody>
+ ${srow('新客',SL_NO.new,SL_NO.newShare)}${srow('舊客',SL_NO.ret,SL_NO.retShare)}</tbody>`;
+document.getElementById('segnote').innerHTML=`Shopline 消費顧客分析（網店・成交口徑，總成交 ${SL_NO.total}，與業績報表營業額略有差異）。新客回購率 <b>${SL_NO.repurch.rate}</b>（首購 ${SL_NO.repurch.first}、回購僅 ${SL_NO.repurch.repeat}）。`;
+document.getElementById('segtake').innerHTML=`<b>辨偽後的真相：本週靠「舊客的量」撐，不是體質變好。</b>舊客成交 <b>+15%</b>，但靠顧客數 <b>+22%</b>、客單 <b>−5%</b>（量多、單價降）——高度疑似 10/1 起<b>會員加碼回饋購物金</b>催出來的；新客成交其實 <b>−5%</b>（客單 <b>−15%</b> 被促銷拉低），<b>新客回購率僅 1.6%</b>（485 首購只有 8 人回購）。<br>→ <b>下一題</b>：新客留不住、轉不動，卡在哪？拆進站漏斗。`;
 
 // 漏斗
 document.getElementById('fnltbl').innerHTML=`<thead><tr><th>階段</th><th>新客</th><th>舊客</th></tr></thead><tbody>
