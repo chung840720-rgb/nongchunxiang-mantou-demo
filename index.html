@@ -61,15 +61,13 @@
   <h1>農純鄉 官網週戰況</h1>
   <span class="period">本週 2026/09/28–10/04（週一–日）　vs　上週 09/21–09/27　vs　去年同週 2025/09/28–10/04</span>
 </header>
-<div class="banner" id="banner"></div>
 
 <h2>Q1　業績三因子誰在動？｜三大槓桿拆解</h2>
 <div class="formula">營業額 ≈ <span>流量</span> × <span>轉換率</span> × <span>客單價</span>　<span style="font-size:12px;color:var(--sub);font-weight:400">（三大槓桿・方向性拆解，相乘約等於、非精確恆等）</span></div>
 <div class="grid" id="gmv"></div>
 <div class="take" id="gmvtake"></div>
 
-<h2>達標了嗎？總業績 & 達標率</h2>
-<div class="grid" id="tgt" style="grid-template-columns:repeat(3,1fr)"></div>
+<h2>10 月累計 vs 月目標</h2>
 <div class="panel month">
   <div><div class="mnote">10 月累計（截至 10/4）</div><div class="big" id="mcum"></div></div>
   <div><div class="mnote">10 月目標</div><div class="big" id="mtgt"></div></div>
@@ -116,8 +114,7 @@
  <div style="font-size:15px;line-height:1.95">
   <b>1. 守住轉換率槓桿（本週唯一成長引擎）</b>：IG 內容牆 A/B 養「看→加購」意願；同步測<b>訪客結帳</b>，解新客「加購→結帳」註冊牆破口。<br>
   <b>2. 新客先顧「質」再放「量」</b>：廣告別急著把新客量加回來——先用內容牆／落地頁把新客「看→加購」拉起來，否則一放量 CPA 又飆（本週 CPA 剛砍半到 $417）。<br>
-  <b>3. 自然增量交棒增量組</b>：GSC「產後／小產調理」「副食品」字清單丟增量組做內容／專題落地頁；「滴雞精推薦」（排名 6.7、CTR 1.9%）做 SEO 拉排名。<br>
-  <span style="color:var(--warn)"><b>⚠ 辨偽待辦</b>：回收 10/1–19 會員加碼回饋（購物金）活動 ROI，隔離舊客本週跳升中「活動 vs 體質」的比例。</span>
+  <b>3. 自然增量交棒增量組</b>：GSC「產後／小產調理」「副食品」字清單丟增量組做內容／專題落地頁；「滴雞精推薦」（排名 6.7、CTR 1.9%）做 SEO 拉排名。
  </div>
 </div>
 
@@ -189,9 +186,6 @@ const agg=w=>{const o={rev:sum(w,4),ord:sum(w,3),uv:sum(w,2),ad:sum(w,5)};
 const L=agg(lw),P=agg(pw),LYw=agg(LY_DAILY);
 const cardFull=([k,v,w,p,y,ly],hl)=>`<div class="card${hl?' hl':''}"><div class="k">${k}</div><div class="v">${v}</div><div class="wow ${w.cls}">WoW ${w.s}</div><div class="prev">上週 ${p}</div><div class="prev" style="margin-top:3px">YoY <span class="yoy ${y.cls}">${y.s}</span>・去年 ${ly}</div></div>`;
 
-// banner
-document.getElementById('banner').innerHTML=`<b>本週營業額 ${money(L.rev)}</b>　WoW <b>${wow(L.rev,P.rev).s}</b>｜YoY <b>${wow(L.rev,LYw.rev).s}</b><br><b>一句話：上週中秋尾段過度加碼、轉不動；本週廣告收手仍逆勢成長。</b>廣告 ${wow(L.ad,P.ad).s}、訂單 ${wow(L.ord,P.ord).s}、ROAS ${P.roas.toFixed(1)}→${L.roas.toFixed(1)}、CPA ${money(P.cpa)}→${money(L.cpa)}。`;
-
 // GMV 拆解
 document.getElementById('gmv').innerHTML=[
  ['流量（不重複）',nf(L.uv),wow(L.uv,P.uv),nf(P.uv),wow(L.uv,LYw.uv),nf(LYw.uv)],
@@ -201,12 +195,7 @@ document.getElementById('gmv').innerHTML=[
 ].map((a,i)=>cardFull(a,i===3)).join('');
 document.getElementById('gmvtake').innerHTML=`<b>GMV +5.0%（YoY −5.2%）</b>：流量 ${wow(L.uv,P.uv).s}、客單 ${wow(L.aov,P.aov).s} 雙降，靠轉換率 <b>${pp(L.cr,P.cr).s}</b> 補回。`;
 
-// 總業績 & 達標
-const pctWk=L.rev/WK_TARGET*100;
-document.getElementById('tgt').innerHTML=`
- <div class="card hl"><div class="k">本週業績</div><div class="v">${money(L.rev)}</div><div class="wow ${wow(L.rev,P.rev).cls}">WoW ${wow(L.rev,P.rev).s}</div></div>
- <div class="card"><div class="k">本週目標</div><div class="v">${money(WK_TARGET)}</div><div class="prev">9/28-30 $2.3M＋10/1-4 $2.5M</div></div>
- <div class="card"><div class="k">週達成率</div><div class="v" style="color:${pctWk>=100?'var(--good)':'var(--warn)'}">${pctWk.toFixed(0)}%</div><div class="prev">缺口 ${money(WK_TARGET-L.rev)}</div></div>`;
+// 月累計 vs 月目標
 const pct=MONTH_CUM/MONTH_TARGET*100;
 document.getElementById('mcum').textContent=money(MONTH_CUM);
 document.getElementById('mtgt').textContent=money(MONTH_TARGET);
