@@ -63,12 +63,15 @@
 </header>
 <div class="banner" id="banner"></div>
 
-<h2>GMV 拆解：流量 × 轉換率 × 客單</h2>
+<h2>先辨偽：這週 +5% 是真贏還是假贏？</h2>
+<div class="take" id="verify" style="background:#fff8e8;border-left-color:var(--warn)"></div>
+
+<h2>Q1　業績三因子誰在動？｜GMV ＝ 流量 × 轉換率 × 客單</h2>
 <div class="formula">GMV ＝ <span>流量</span> × <span>轉換率</span> × <span>客單價</span></div>
 <div class="grid" id="gmv"></div>
 <div class="take" id="gmvtake"></div>
 
-<h2>總業績 & 達標率</h2>
+<h2>達標了嗎？總業績 & 達標率</h2>
 <div class="grid" id="tgt" style="grid-template-columns:repeat(3,1fr)"></div>
 <div class="panel month">
   <div><div class="mnote">10 月累計（截至 10/4）</div><div class="big" id="mcum"></div></div>
@@ -81,19 +84,19 @@
 <h2>核心效率指標（本週 vs 上週・YoY 去年同週）</h2>
 <div class="grid" id="kpis" style="grid-template-columns:repeat(4,1fr)"></div>
 
-<h2><span class="tag ppl">人</span>新客 vs 舊客（GA4 口徑）</h2>
+<h2><span class="tag ppl">人</span>Q2　成長從哪來？新客 vs 舊客（GA4 口徑）</h2>
 <div class="panel"><table class="dt" id="segtbl"></table>
   <div class="mnote" style="margin-top:6px">GA4 口徑（成交／營收為 GA4 統計，與 Shopline 實際有落差，看<b>新舊客相對差異與趨勢</b>）。</div></div>
 <div class="take" id="segtake"></div>
 
-<h2><span class="tag ppl">人</span>進站漏斗 × 新舊客：最大破口＝加購 → 進結帳</h2>
+<h2><span class="tag ppl">人</span>Q3　新客卡在哪？進站漏斗 × 新舊客（破口＝加購→結帳）</h2>
 <div class="fnlwrap">
   <div class="panel"><div class="mnote" style="margin-bottom:6px">各階段佔進站比例</div><table class="dt" id="fnltbl"></table></div>
   <div class="panel"><div class="mnote" style="margin-bottom:6px">相鄰階段轉換率</div><table class="dt" id="steptbl"></table></div>
 </div>
 <div class="leak" id="leak"></div>
 
-<h2><span class="tag trf">流量</span>流量結構：自然 vs 付費（GA4）</h2>
+<h2><span class="tag trf">流量</span>Q4　留下的是什麼流量？自然 vs 付費（GA4）</h2>
 <div class="grid" id="flow" style="grid-template-columns:repeat(3,1fr)"></div>
 <div class="take" id="flowtake"></div>
 
@@ -104,12 +107,22 @@
 <h2><span class="tag trf">流量</span>Meta 各品類廣告花費（本週）</h2>
 <div class="panel"><div id="catbars"></div><div class="mnote" style="margin-top:8px" id="catnote"></div></div>
 
-<h2><span class="tag trf">流量</span>自然流量切角：GSC 上升關鍵字（給增量組）</h2>
+<h2><span class="tag trf">流量</span>Q5　自然增量從哪長？GSC 上升關鍵字（給增量組）</h2>
 <div class="fnlwrap">
   <div class="panel"><div class="mnote" style="margin-bottom:6px">曝光上升 TOP（本週 vs 上週）</div><table class="dt" id="gscimp"></table></div>
   <div class="panel"><div class="mnote" style="margin-bottom:6px">點擊上升 TOP</div><table class="dt" id="gscclk"></table></div>
 </div>
 <div class="take" id="gsctake"></div>
+
+<h2>Q6　決策：下週 3 個動作</h2>
+<div class="panel" style="border-left:4px solid var(--accent)">
+ <div style="font-size:15px;line-height:1.95">
+  <b>1. 守住轉換率槓桿（本週唯一成長引擎）</b>：IG 內容牆 A/B 養「看→加購」意願；同步測<b>訪客結帳</b>，解新客「加購→結帳」註冊牆破口。<br>
+  <b>2. 新客先顧「質」再放「量」</b>：廣告別急著把新客量加回來——先用內容牆／落地頁把新客「看→加購」拉起來，否則一放量 CPA 又飆（本週 CPA 剛砍半到 $417）。<br>
+  <b>3. 自然增量交棒增量組</b>：GSC「產後／小產調理」「副食品」字清單丟增量組做內容／專題落地頁；「滴雞精推薦」（排名 6.7、CTR 1.9%）做 SEO 拉排名。<br>
+  <span style="color:var(--warn)"><b>⚠ 辨偽待辦</b>：回收 10/1–19 會員加碼回饋（購物金）活動 ROI，隔離舊客本週跳升中「活動 vs 體質」的比例。</span>
+ </div>
+</div>
 
 <footer id="foot"></footer>
 
@@ -181,7 +194,7 @@ document.getElementById('gmv').innerHTML=[
  ['× 客單價',money(L.aov),wow(L.aov,P.aov),money(P.aov),wow(L.aov,LYw.aov),money(LYw.aov)],
  ['= 營業額',money(L.rev),wow(L.rev,P.rev),money(P.rev),wow(L.rev,LYw.rev),money(LYw.rev)]
 ].map((a,i)=>cardFull(a,i===3)).join('');
-document.getElementById('gmvtake').innerHTML=`<b>拆解：本週 GMV +5.0%（YoY −5.2%），完全靠轉換率撐。</b>流量 WoW ${wow(L.uv,P.uv).s}（中秋 9/25 後回落）、客單 ${wow(L.aov,P.aov).s} 雙降，但轉換率 <b>${pp(L.cr,P.cr).s}</b>（YoY ${pp(L.cr,LYw.cr).s}）全部補回——<b>轉換率是本週唯一的成長引擎</b>，也是後續（IG 內容牆、訪客結帳）要守住的槓桿。`;
+document.getElementById('gmvtake').innerHTML=`<b>拆解：本週 GMV +5.0%（YoY −5.2%），完全靠轉換率撐。</b>流量 WoW ${wow(L.uv,P.uv).s}（中秋 9/25 後回落）、客單 ${wow(L.aov,P.aov).s} 雙降，但轉換率 <b>${pp(L.cr,P.cr).s}</b>（YoY ${pp(L.cr,LYw.cr).s}）全部補回——<b>轉換率是本週唯一的成長引擎</b>，也是後續（IG 內容牆、訪客結帳）要守住的槓桿。<br>→ <b>下一題</b>：轉換率升是「誰」貢獻的？看新舊客。`;
 
 // 總業績 & 達標
 const pctWk=L.rev/WK_TARGET*100;
@@ -196,6 +209,9 @@ document.getElementById('mly').textContent=money(MONTH_LY);
 document.getElementById('mpctlabel').innerHTML=`月達成率 <b>${pct.toFixed(1)}%</b>　（月進度 ${(DAYS_ELAPSED/MONTH_DAYS*100).toFixed(0)}%，${DAYS_ELAPSED}/${MONTH_DAYS} 天）`;
 document.getElementById('mbar').style.width=Math.min(100,pct)+'%';
 document.getElementById('mnote2').innerHTML=`10 月目標 ${money(MONTH_TARGET)}（YoY vs 去年 ${wow(MONTH_TARGET,MONTH_LY).s}）為<b>雙11背載</b>：末兩週（10/19–31）合計佔 50%，月初進度偏低屬正常。`;
+
+// 先辨偽節點
+document.getElementById('verify').innerHTML=`<b>別急著慶祝 +5%——先過三關：</b><br>• <b>沒達標</b>：週達成僅 ${pctWk.toFixed(0)}%（目標 ${money(WK_TARGET)}、缺口 ${money(WK_TARGET-L.rev)}）。<br>• <b>YoY 仍 ${wow(L.rev,LYw.rev).s}</b>：營收仍低於去年同週。<br>• <b>confounder（最關鍵）</b>：10/1–19 有「會員加碼回饋」購物金活動（發放約 $800k）——下方<b>舊客本週的跳升，要先扣掉活動效果</b>才能算體質。<br>• <b>口徑</b>：新舊客／漏斗為 GA4 統計，成交與 Shopline 實際有落差，看相對趨勢。<br>→ 所以真正要問的不是「有沒有成長」，而是 <b>「成長從哪來、能不能複製」</b>——以下依此追問。`;
 
 // 核心效率 KPI
 document.getElementById('kpis').innerHTML=[
@@ -214,7 +230,7 @@ const seg=(lab,c,p)=>{const[s,pp2,rev]=c,[ps,pp3,prev_rev]=p;const cr=pp2/s,pcr=
   <td>${nf(pp2)}<br><span class="sm ${wow(pp2,pp3).cls}">${wow(pp2,pp3).s}</span></td></tr>`;};
 document.getElementById('segtbl').innerHTML=`<thead><tr><th>區隔</th><th>流量 sessions</th><th>轉換率</th><th>客單</th><th>成交</th></tr></thead><tbody>
  ${seg('新客',NO.cur.n,NO.prev.n)}${seg('舊客',NO.cur.r,NO.prev.r)}</tbody>`;
-document.getElementById('segtake').innerHTML=`<b>廣告收手主要砍「新客流量」（−27%），但換來更好的質。</b>新客轉換 0.93%→<b>1.51%</b>（+0.58pp）、成交 <b>+18%</b>；舊客轉換 4.66%→<b>5.71%</b>（+1.05pp）、成交 <b>+27%</b>。舊客轉換率是新客的 <b>3.8 倍</b>——本週靠舊客撐成交，新客留存＋轉化是長線重點。`;
+document.getElementById('segtake').innerHTML=`<b>廣告收手主要砍「新客流量」（−27%），但換來更好的質。</b>新客轉換 0.93%→<b>1.51%</b>（+0.58pp）、成交 <b>+18%</b>；舊客轉換 4.66%→<b>5.71%</b>（+1.05pp）、成交 <b>+27%</b>。舊客轉換率是新客的 <b>3.8 倍</b>——本週靠舊客撐成交，新客留存＋轉化是長線重點。<br>⚠ <b>辨偽</b>：舊客成交 +27% 有一部分是 10/1 起<b>會員加碼回饋購物金</b>帶的，非純體質，需隔離。<br>→ <b>下一題</b>：新客為何這麼弱？拆進站漏斗。`;
 
 // 漏斗
 document.getElementById('fnltbl').innerHTML=`<thead><tr><th>階段</th><th>新客</th><th>舊客</th></tr></thead><tbody>
@@ -230,7 +246,7 @@ document.getElementById('flow').innerHTML=
  flowCard('付費 sessions',F.paid,wow(F.paid,FP.paid),FP.paid)+
  flowCard('自然 sessions',F.org,wow(F.org,FP.org),FP.org)+
  flowCard('其他 sessions',F.oth,wow(F.oth,FP.oth),FP.oth);
-document.getElementById('flowtake').innerHTML=`<b>廣告收手砍的是付費流量（${wow(F.paid,FP.paid).s}），但自然流量逆勢 ${wow(F.org,FP.org).s}。</b>付費仍佔 <b>${(F.paid/Ftot*100).toFixed(0)}%</b>（高度依賴），不過「少花錢、自然量還漲、轉換率更好」是體質往正向走的訊號——自然流量的增量切角（下方 GSC）值得加碼。`;
+document.getElementById('flowtake').innerHTML=`<b>廣告收手砍的是付費流量（${wow(F.paid,FP.paid).s}），但自然流量逆勢 ${wow(F.org,FP.org).s}。</b>付費仍佔 <b>${(F.paid/Ftot*100).toFixed(0)}%</b>（高度依賴），不過「少花錢、自然量還漲、轉換率更好」是體質往正向走的訊號——自然流量的增量切角值得加碼。<br>→ <b>下一題</b>：自然的增量，具體從哪些字長出來？看 GSC。`;
 
 // 廣告總表 KDDR
 const [alw,apw]=sl(DAILY_AD);
