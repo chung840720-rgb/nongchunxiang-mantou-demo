@@ -25,9 +25,9 @@
   .card .k{font-size:13px;color:var(--sub);margin-bottom:6px}
   .card .v{font-size:24px;font-weight:700;letter-spacing:-.01em}
   .card .wow{display:inline-block;font-size:13px;font-weight:600;padding:2px 8px;border-radius:20px;margin-top:8px}
-  .up{color:var(--good);background:var(--goodbg)} .down{color:var(--bad);background:var(--badbg)} .flat{color:var(--warn);background:#fbf3df}
+  .up{color:var(--bad);background:var(--badbg)} .down{color:var(--good);background:var(--goodbg)} .flat{color:var(--warn);background:#fbf3df}
   .card .prev{font-size:12px;color:var(--sub);margin-top:6px}
-  .yoy{font-weight:600} .yoy.up{color:var(--good)} .yoy.down{color:var(--bad)} .yoy.flat{color:var(--warn)}
+  .yoy{font-weight:600} .yoy.up{color:var(--bad)} .yoy.down{color:var(--good)} .yoy.flat{color:var(--warn)}
   .panel{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin-top:12px}
   .month{display:flex;flex-wrap:wrap;align-items:center;gap:16px 26px}
   .month .big{font-size:22px;font-weight:700}
@@ -48,7 +48,7 @@
   table.dt th,table.dt td{padding:8px 8px;text-align:right;border-bottom:1px solid #f0f2f5;white-space:nowrap}
   table.dt th:first-child,table.dt td:first-child{text-align:left}
   table.dt th{color:var(--sub);font-weight:600}
-  .sm{font-size:11px;font-weight:700} .sm.up{color:var(--good)} .sm.down{color:var(--bad)} .sm.flat{color:var(--warn)}
+  .sm{font-size:11px;font-weight:700} .sm.up{color:var(--bad)} .sm.down{color:var(--good)} .sm.flat{color:var(--warn)}
   .fnlwrap{display:grid;grid-template-columns:1fr 1fr;gap:12px}
   @media(max-width:820px){.fnlwrap{grid-template-columns:1fr}}
   .leak{background:#fbe9e7;border-left:4px solid var(--bad);border-radius:0 8px 8px 0;padding:10px 14px;margin-top:10px;font-size:14px;line-height:1.7}
@@ -175,7 +175,7 @@ const sum=(a,i)=>a.reduce((s,r)=>s+r[i],0);
 const sl=(a)=>[a.slice(a.length-7),a.slice(a.length-14,a.length-7)];
 const nf=n=>Math.round(n).toLocaleString('en-US');
 const money=n=>'$'+nf(n);
-const wow=(c,p,inv=false)=>{const d=(c-p)/p*100;const up=d>=0;const cls=Math.abs(d)<0.5?'flat':((up!==inv)?'up':'down');return {cls,s:(d>=0?'+':'')+d.toFixed(1)+'%'};};
+const wow=(c,p,inv=false)=>{const d=(c-p)/p*100;const cls=Math.abs(d)<0.5?'flat':(d>=0?'up':'down');return {cls,s:(d>=0?'+':'')+d.toFixed(1)+'%'};}; // 統一照正負號：+紅(up) −綠(down)，inv不再反轉
 const pp=(c,p)=>{const d=(c-p)*100;const cls=Math.abs(d)<0.05?'flat':(d>=0?'up':'down');return {cls,s:(d>=0?'+':'')+d.toFixed(2)+'pp'};};
 
 const [lw,pw]=sl(daily);
