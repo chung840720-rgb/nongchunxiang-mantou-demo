@@ -66,8 +66,8 @@
 <h2>先辨偽：這週 +5% 是真贏還是假贏？</h2>
 <div class="take" id="verify" style="background:#fff8e8;border-left-color:var(--warn)"></div>
 
-<h2>Q1　業績三因子誰在動？｜GMV ＝ 流量 × 轉換率 × 客單</h2>
-<div class="formula">GMV ＝ <span>流量</span> × <span>轉換率</span> × <span>客單價</span></div>
+<h2>Q1　業績三因子誰在動？｜三大槓桿拆解</h2>
+<div class="formula">營業額 ≈ <span>流量</span> × <span>轉換率</span> × <span>客單價</span>　<span style="font-size:12px;color:var(--sub);font-weight:400">（三大槓桿・方向性拆解，相乘約等於、非精確恆等）</span></div>
 <div class="grid" id="gmv"></div>
 <div class="take" id="gmvtake"></div>
 
@@ -195,9 +195,9 @@ document.getElementById('gmv').innerHTML=[
  ['流量（不重複）',nf(L.uv),wow(L.uv,P.uv),nf(P.uv),wow(L.uv,LYw.uv),nf(LYw.uv)],
  ['× 轉換率',(L.cr*100).toFixed(2)+'%',pp(L.cr,P.cr),(P.cr*100).toFixed(2)+'%',pp(L.cr,LYw.cr),(LYw.cr*100).toFixed(2)+'%'],
  ['× 客單價',money(L.aov),wow(L.aov,P.aov),money(P.aov),wow(L.aov,LYw.aov),money(LYw.aov)],
- ['= 營業額',money(L.rev),wow(L.rev,P.rev),money(P.rev),wow(L.rev,LYw.rev),money(LYw.rev)]
+ ['營業額（業績報表實際）',money(L.rev),wow(L.rev,P.rev),money(P.rev),wow(L.rev,LYw.rev),money(LYw.rev)]
 ].map((a,i)=>cardFull(a,i===3)).join('');
-document.getElementById('gmvtake').innerHTML=`<b>拆解：本週 GMV +5.0%（YoY −5.2%），完全靠轉換率撐。</b>流量 WoW ${wow(L.uv,P.uv).s}（中秋 9/25 後回落）、客單 ${wow(L.aov,P.aov).s} 雙降，但轉換率 <b>${pp(L.cr,P.cr).s}</b>（YoY ${pp(L.cr,LYw.cr).s}）全部補回——<b>轉換率是本週唯一的成長引擎</b>，也是後續（IG 內容牆、訪客結帳）要守住的槓桿。<br>→ <b>下一題</b>：轉換率升是「誰」貢獻的？看新舊客。`;
+document.getElementById('gmvtake').innerHTML=`<b>拆解：本週 GMV +5.0%（YoY −5.2%），完全靠轉換率撐。</b>流量 WoW ${wow(L.uv,P.uv).s}（中秋 9/25 後回落）、客單 ${wow(L.aov,P.aov).s} 雙降，但轉換率 <b>${pp(L.cr,P.cr).s}</b>（YoY ${pp(L.cr,LYw.cr).s}）全部補回——<b>轉換率是本週唯一的成長引擎</b>，也是後續（IG 內容牆、訪客結帳）要守住的槓桿。<br><span style="font-size:12px;color:var(--sub)">註：轉換率＝訂單÷不重複訪客（加總後）、客單＝營業額÷訂單；三者相乘 ≈ 營業額（因四捨五入與口徑非精確相等），<b>營業額以業績報表為準</b>。</span><br>→ <b>下一題</b>：轉換率升是「誰」貢獻的？看新舊客。`;
 
 // 總業績 & 達標
 const pctWk=L.rev/WK_TARGET*100;
