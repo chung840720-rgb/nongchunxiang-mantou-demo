@@ -11,8 +11,8 @@
   header{display:flex;flex-wrap:wrap;align-items:baseline;gap:8px 16px;margin-bottom:6px}
   h1{font-size:24px;font-weight:700}
   .period{color:var(--sub);font-size:15px}
-  .banner{background:var(--badbg);border-left:4px solid var(--bad);padding:10px 14px;border-radius:0 8px 8px 0;margin:12px 0 18px;font-size:15px}
-  .banner b{color:var(--bad)}
+  .banner{background:var(--goodbg);border-left:4px solid var(--good);padding:10px 14px;border-radius:0 8px 8px 0;margin:12px 0 18px;font-size:15px}
+  .banner b{color:var(--ink)}
   h2{font-size:14px;color:var(--sub);font-weight:600;letter-spacing:.03em;margin:22px 0 10px;text-transform:uppercase}
   .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
   @media(max-width:820px){.grid{grid-template-columns:repeat(2,1fr)}}
@@ -22,6 +22,7 @@
   .card .wow{display:inline-block;font-size:13px;font-weight:600;padding:2px 8px;border-radius:20px;margin-top:8px}
   .up{color:var(--good);background:var(--goodbg)} .down{color:var(--bad);background:var(--badbg)} .flat{color:var(--warn);background:#fbf3df}
   .card .prev{font-size:12px;color:var(--sub);margin-top:6px}
+  .yoy{font-weight:600} .yoy.up{color:var(--good)} .yoy.down{color:var(--bad)} .yoy.flat{color:var(--warn)}
   .panel{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin-top:12px}
   .month{display:flex;flex-wrap:wrap;align-items:center;gap:16px 26px}
   .month .big{font-size:22px;font-weight:700}
@@ -32,13 +33,11 @@
   .legend{font-size:12px;color:var(--sub);margin-top:6px}
   .dot{display:inline-block;width:9px;height:9px;border-radius:2px;vertical-align:middle;margin-right:4px}
   .catrow{display:flex;align-items:center;gap:10px;margin:6px 0;font-size:13px}
-  .catrow .nm{width:96px;color:var(--ink);flex:none;text-align:right}
+  .catrow .nm{width:150px;color:var(--ink);flex:none;text-align:right}
   .catrow .track{flex:1;background:#eef1f4;border-radius:6px;height:16px;overflow:hidden}
   .catrow .track>i{display:block;height:100%;background:var(--cat)}
-  .catrow .val{width:120px;flex:none;color:var(--sub);text-align:right}
+  .catrow .val{width:160px;flex:none;color:var(--sub);text-align:right}
   .catrow .val b{color:var(--ink)} .w-up{color:var(--good)} .w-down{color:var(--bad)}
-  .two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-  @media(max-width:820px){.two{grid-template-columns:1fr}}
   table.oct{width:100%;border-collapse:collapse;font-size:13px}
   table.oct th,table.oct td{padding:6px 8px;text-align:right;border-bottom:1px solid #f0f2f5;white-space:nowrap}
   table.oct th:first-child,table.oct td:first-child{text-align:left}
@@ -46,54 +45,48 @@
   table.oct tr.tot td{font-weight:700;border-top:2px solid var(--line)}
   .risk{background:#fffaf0;border-left:4px solid var(--warn);border-radius:0 8px 8px 0;padding:12px 16px;margin-top:12px;font-size:14px;line-height:1.8}
   .risk b{color:var(--ink)}
+  .pend{background:#fffaf0;border-left:4px solid var(--warn);border-radius:0 8px 8px 0;padding:12px 16px;margin-top:12px;font-size:14px;line-height:1.7}
+  .pend b{color:var(--ink)}
   footer{color:var(--sub);font-size:12px;margin-top:22px;border-top:1px solid var(--line);padding-top:12px}
 </style>
 </head>
 <body>
 <header>
   <h1>農純鄉 官網週戰況</h1>
-  <span class="period">上週 2026/09/21–09/27（週一–日）　vs　上上週 09/14–09/20</span>
+  <span class="period">本週 2026/09/28–10/04（週一–日）　vs　上週 09/21–09/27　vs　去年同週 2025/09/28–10/04</span>
 </header>
 <div class="banner" id="banner"></div>
 
-<h2>9 月月累計 vs 月目標</h2>
-<div class="panel month">
-  <div><div class="mnote">月累計（截至 9/28）</div><div class="big" id="mcum"></div></div>
-  <div><div class="mnote">月目標</div><div class="big" id="mtgt"></div></div>
-  <div><div class="mnote">去年 9 月（全月）</div><div class="big" id="mly"></div><div class="mnote" id="mlyyoy"></div></div>
-  <div style="flex:1;min-width:240px"><div class="mnote" id="mpctlabel"></div><div class="bar"><span id="mbar"></span></div></div>
-</div>
-
+<h2>本週 vs 上週 vs 去年同週（營業額）</h2>
 <div class="panel">
-  <div class="mnote" style="margin-bottom:8px">9 月 YoY 對比（今年 vs 去年 vs 目標）</div>
-  <div id="yoybars"></div>
-  <div class="mnote" id="yoynote" style="margin-top:8px"></div>
+  <div id="wkbars"></div>
+  <div class="mnote" id="wknote" style="margin-top:8px"></div>
 </div>
 
-<h2>營運 KPI（上週 vs 上上週）</h2>
+<h2>營運 KPI（本週 vs 上週・YoY 去年同週）</h2>
 <div class="grid" id="kpis"></div>
 
-<h2>每日營業額趨勢（9月・上週標色）</h2>
+<h2>每日營業額趨勢（9/1–10/4・本週 9/28–10/4 標色）</h2>
 <div class="panel"><div id="chart"></div>
-  <div class="legend"><span class="dot" style="background:#c7d2de"></span>前幾週　<span class="dot" style="background:#0f5faf"></span>上週（9/21–9/27）</div></div>
+  <div class="legend"><span class="dot" style="background:#c7d2de"></span>前幾週　<span class="dot" style="background:#0f5faf"></span>本週（9/28–10/4）</div></div>
 
-<h2>廣告總表（上週 vs 上上週）</h2>
-<div class="grid" id="adspend" style="grid-template-columns:repeat(3,1fr)"></div>
-<div class="grid" id="adga4" style="grid-template-columns:repeat(3,1fr);margin-top:12px"></div>
-<div class="mnote" id="adinsight" style="margin-top:10px"></div>
-
-<div class="two">
-  <div class="panel"><div class="mnote" style="margin-bottom:4px">每日廣告花費（FB／Google・9月）</div><div id="adchart"></div>
-    <div class="legend"><span class="dot" style="background:#2f6fb0"></span>Facebook　<span class="dot" style="background:#e0993a"></span>Google</div></div>
-  <div class="panel"><div class="mnote" style="margin-bottom:4px">每日 sessions：付費 vs 自然（GA4・9月）</div><div id="ga4chart"></div>
-    <div class="legend"><span class="dot" style="background:#2f6fb0"></span>付費　<span class="dot" style="background:#3f7d5a"></span>自然　<span class="dot" style="background:#c7d2de"></span>其他</div></div>
+<h2>10 月月累計 vs 月目標</h2>
+<div class="panel month">
+  <div><div class="mnote">月累計（截至 10/4）</div><div class="big" id="mcum"></div></div>
+  <div><div class="mnote">月目標</div><div class="big" id="mtgt"></div></div>
+  <div><div class="mnote">去年 10 月（全月）</div><div class="big" id="mly"></div></div>
+  <div style="flex:1;min-width:240px"><div class="mnote" id="mpctlabel"></div><div class="bar"><span id="mbar"></span></div></div>
 </div>
+<div class="mnote" id="mnote2" style="margin-top:8px"></div>
 
-<h2>各品類廣告花費（上週・vs 上上週）</h2>
-<div class="panel"><div id="catbars"></div></div>
+<h2>廣告（本週）</h2>
+<div class="grid" id="adspend" style="grid-template-columns:repeat(3,1fr)"></div>
+<div class="panel" style="margin-top:12px"><div class="mnote" style="margin-bottom:4px">每日總廣告費（9/1–10/4・本週標色）</div><div id="adchart"></div>
+  <div class="legend"><span class="dot" style="background:#c7d2de"></span>前幾週　<span class="dot" style="background:#2f6fb0"></span>本週（9/28–10/4）</div></div>
+<div class="pend" id="adpend"></div>
 
 <div style="border-top:3px solid var(--ink);opacity:.85;margin:44px 0 0"></div>
-<div style="text-align:center;color:var(--sub);font-size:12px;letter-spacing:.1em;margin:6px 0 0">— 下一段：10 月展望 —</div>
+<div style="text-align:center;color:var(--sub);font-size:12px;letter-spacing:.1em;margin:6px 0 0">— 本月（10 月）目標與風險盤查 —</div>
 
 <h2>10 月業績目標（保守 +10% ／ 積極 +20%）＋ 風險盤查</h2>
 <div class="grid" id="octtot" style="grid-template-columns:repeat(3,1fr)"></div>
@@ -103,7 +96,7 @@
 <h2>本月專案（饅頭）：IG 內容牆</h2>
 <div class="panel" style="border-left:4px solid var(--accent)">
   <div style="font-size:15px;line-height:1.9">
-    • <b>目標</b>：增強「瀏覽後 → 加購物車」這段的轉換率（對症上週「流量有進、轉不動」）。<br>
+    • <b>目標</b>：增強「瀏覽後 → 加購物車」這段的轉換率。<br>
     • <b>方法</b>：先做 A/B test，測試一個月。<br>
     • <b>延伸</b>：效果佳 → 輔助雙11進站流量，<b>預期降低 CPA</b>。
   </div>
@@ -112,25 +105,30 @@
 <footer id="foot"></footer>
 
 <script>
+// daily = [ "M/D", sessions, UV(不重複), 訂單, 營業額, 廣告費 ]  2026/9/1–10/4
 const daily=[
- [1,31567,11585,411,1016251,198425],[2,19024,8187,202,656214,122938],[3,18182,8633,160,556835,121050],
- [4,16388,7466,153,488636,104041],[5,14651,6527,122,351041,82724],[6,15821,6267,156,392459,78603],
- [7,20694,9031,194,576333,146170],[8,20667,9528,206,617964,145124],[9,24805,12007,234,742606,204257],
- [10,17721,8035,173,512399,117027],[11,14422,6644,156,528148,75608],[12,12516,5337,123,387406,62219],
- [13,14653,5708,172,494583,73215],[14,22616,9450,226,677952,147533],[15,22801,10353,215,658876,171000],
- [16,20837,9054,206,652521,155676],[17,18222,7650,174,532216,126764],[18,16326,6529,187,530895,93903],
- [19,14441,6016,118,397226,81881],[20,18204,7265,205,615287,99096],[21,25049,12248,241,741621,215088],
- [22,25329,10765,260,796087,218951],[23,21474,10170,170,482640,191843],[24,15282,6928,131,425810,106703],
- [25,14379,5844,147,391463,83615],[26,13431,5694,108,337795,81847],[27,13737,6053,131,337282,87216],
- [28,18234,6631,213,538339,88644]];
-const MONTH_TARGET=23601478,MONTH_CUM=15436885,MONTH_DAYS=30,DAYS_ELAPSED=28;
-const DAILY_AD=[[1,146378,50895],[2,75546,47312],[3,75827,44731],[4,61701,41614],[5,40508,41851],[6,35965,42473],[7,95672,46091],[8,101695,41232],[9,158401,44092],[10,76088,39531],[11,38309,36633],[12,24800,36832],[13,34976,37672],[14,100518,46771],[15,117432,52943],[16,106179,49404],[17,74963,51315],[18,45035,48582],[19,34485,47122],[20,47789,51184],[21,163073,51968],[22,156854,62391],[23,130684,60594],[24,65442,40675],[25,50297,33006],[26,49854,31730],[27,55216,31632],[28,50245,38032]];
-const GA4_DAILY=[[1,7808,2285,2052],[2,5645,1689,972],[3,6229,1648,859],[4,5198,1421,829],[5,4282,1424,738],[6,4018,1375,733],[7,6489,1615,939],[8,6930,1654,866],[9,9478,1852,971],[10,5611,1574,865],[11,3812,1557,993],[12,3108,1391,670],[13,3603,1310,717],[14,7261,1705,902],[15,7826,1583,899],[16,6696,1574,984],[17,5237,1497,833],[18,4099,1633,944],[19,3778,1299,868],[20,4573,1589,956],[21,9427,1875,1183],[22,8085,1982,1135],[23,7903,1674,1131],[24,4558,1446,935],[25,3624,1161,955],[26,3827,1103,786],[27,4087,1144,768],[28,4501,1026,1657]];
-const CAT_WEEK=[["滴雞精",193631,180280],["鱸魚精",190840,171528],["其他",152715,107033],["不分品項",140647,156556],["寶寶燉飯",67243,37658],["寶寶粥",59784,49818],["寶寶米餅",41403,36460],["益生菌",40517,55641],["寶寶高湯",37279,28287],["寶寶麵",35179,26355],["葉黃素果凍條",24180,24107]];
-const PERF={imp:4365484,clk:23466,view:139636};
+ ["9/1",31567,11585,411,1016251,198425],["9/2",19024,8187,202,656214,122938],["9/3",18182,8633,160,556835,121050],
+ ["9/4",16388,7466,153,488636,104041],["9/5",14651,6527,122,351041,82724],["9/6",15821,6267,156,392459,78603],
+ ["9/7",20694,9031,194,576333,146170],["9/8",20667,9528,206,617964,145124],["9/9",24805,12007,234,742606,204257],
+ ["9/10",17721,8035,173,512399,117027],["9/11",14422,6644,156,528148,75608],["9/12",12516,5337,123,387406,62219],
+ ["9/13",14653,5708,172,494583,73215],["9/14",22616,9450,226,677952,147533],["9/15",22801,10353,215,658876,171000],
+ ["9/16",20837,9054,206,652521,155676],["9/17",18222,7650,174,532216,126764],["9/18",16326,6529,187,530895,93903],
+ ["9/19",14441,6016,118,397226,81881],["9/20",18204,7265,205,615287,99096],["9/21",25049,12248,241,741621,215088],
+ ["9/22",25329,10765,260,796087,218951],["9/23",21474,10170,170,482640,191843],["9/24",15282,6928,131,425810,106703],
+ ["9/25",14379,5844,147,391463,83615],["9/26",13431,5694,108,337795,81847],["9/27",13737,6053,131,337282,87216],
+ ["9/28",18234,6631,213,538339,88644],["9/29",24729,8283,372,824203,105047],["9/30",18609,6720,238,699273,91528],
+ ["10/1",16944,6263,166,453935,68175],["10/2",13743,5800,132,399325,76274],["10/3",12008,5351,120,339771,68547],
+ ["10/4",17967,6905,149,432971,81879]];
+
+// 去年同週 2025/9/28–10/4 合計（來自業績報表 2025｜9月＋10月分頁）
+const LYw={rev:3890212,ord:1324,uv:58006,ad:713225};
+LYw.aov=LYw.rev/LYw.ord;LYw.cr=LYw.ord/LYw.uv;LYw.roas=LYw.rev/LYw.ad;LYw.cpa=LYw.ad/LYw.ord;
+
+// 10 月（本月）
+const MONTH_TARGET=20964764,MONTH_CUM=1626002,MONTH_DAYS=31,DAYS_ELAPSED=4,MONTH_LY=16958311;
 
 const sum=(a,i)=>a.reduce((s,r)=>s+r[i],0);
-const sl=(a)=>[a.slice(20,27),a.slice(13,20)];
+const sl=(a)=>[a.slice(a.length-7),a.slice(a.length-14,a.length-7)]; // [本週(末7日), 上週(前7日)]
 const nf=n=>Math.round(n).toLocaleString('en-US');
 const money=n=>'$'+nf(n);
 const wow=(c,p,inv=false)=>{const d=(c-p)/p*100;const up=d>=0;const cls=Math.abs(d)<0.5?'flat':((up!==inv)?'up':'down');return {cls,s:(d>=0?'+':'')+d.toFixed(1)+'%'};};
@@ -140,51 +138,45 @@ const [lw,pw]=sl(daily);
 const agg=w=>{const o={rev:sum(w,4),ord:sum(w,3),uv:sum(w,2),ad:sum(w,5)};o.aov=o.rev/o.ord;o.cr=o.ord/o.uv;o.roas=o.rev/o.ad;o.cpa=o.ad/o.ord;return o;};
 const L=agg(lw),P=agg(pw);
 document.getElementById('kpis').innerHTML=[
- ['營業額',money(L.rev),wow(L.rev,P.rev),money(P.rev)],['訂單數',nf(L.ord),wow(L.ord,P.ord),nf(P.ord)],
- ['不重複流量',nf(L.uv),wow(L.uv,P.uv),nf(P.uv)],['轉換率',(L.cr*100).toFixed(2)+'%',wow(L.cr,P.cr),(P.cr*100).toFixed(2)+'%'],
- ['客單價',money(L.aov),wow(L.aov,P.aov),money(P.aov)],['廣告費',money(L.ad),wow(L.ad,P.ad,true),money(P.ad)],
- ['ROAS',L.roas.toFixed(2),wow(L.roas,P.roas),P.roas.toFixed(2)],['CPA',money(L.cpa),wow(L.cpa,P.cpa,true),money(P.cpa)]
-].map(([k,v,w,p])=>`<div class="card"><div class="k">${k}</div><div class="v">${v}</div><div class="wow ${w.cls}">${w.s}</div><div class="prev">上上週 ${p}</div></div>`).join('');
-document.getElementById('banner').innerHTML=`上週（9/21–9/27，含中秋 9/25）營業額 <b>${money(L.rev)}</b>（WoW <b>${wow(L.rev,P.rev).s}</b>）：訂單 ${wow(L.ord,P.ord).s}、客單 ${wow(L.aov,P.aov).s}、ROAS ${wow(L.roas,P.roas).s} 下滑，惟流量 <b>${wow(L.uv,P.uv).s}</b>——流量有進、轉不動，是轉換／客單問題。9 月中秋檔期（中秋 9/25）買氣多在檔期前段釋放，上週為尾段；10 月接雙11。`;
+ ['營業額',money(L.rev),wow(L.rev,P.rev),money(P.rev),wow(L.rev,LYw.rev),money(LYw.rev)],
+ ['訂單數',nf(L.ord),wow(L.ord,P.ord),nf(P.ord),wow(L.ord,LYw.ord),nf(LYw.ord)],
+ ['不重複流量',nf(L.uv),wow(L.uv,P.uv),nf(P.uv),wow(L.uv,LYw.uv),nf(LYw.uv)],
+ ['轉換率',(L.cr*100).toFixed(2)+'%',wow(L.cr,P.cr),(P.cr*100).toFixed(2)+'%',wow(L.cr,LYw.cr),(LYw.cr*100).toFixed(2)+'%'],
+ ['客單價',money(L.aov),wow(L.aov,P.aov),money(P.aov),wow(L.aov,LYw.aov),money(LYw.aov)],
+ ['廣告費',money(L.ad),wow(L.ad,P.ad,true),money(P.ad),wow(L.ad,LYw.ad,true),money(LYw.ad)],
+ ['ROAS',L.roas.toFixed(2),wow(L.roas,P.roas),P.roas.toFixed(2),wow(L.roas,LYw.roas),LYw.roas.toFixed(2)],
+ ['CPA',money(L.cpa),wow(L.cpa,P.cpa,true),money(P.cpa),wow(L.cpa,LYw.cpa,true),money(LYw.cpa)]
+].map(([k,v,w,p,y,ly])=>`<div class="card"><div class="k">${k}</div><div class="v">${v}</div><div class="wow ${w.cls}">WoW ${w.s}</div><div class="prev">上週 ${p}</div><div class="prev" style="margin-top:3px">YoY <span class="yoy ${y.cls}">${y.s}</span>・去年 ${ly}</div></div>`).join('');
+document.getElementById('banner').innerHTML=`本週（9/28–10/4）營業額 <b>${money(L.rev)}</b>（WoW <b>${wow(L.rev,P.rev).s}</b>、YoY <b>${wow(L.rev,LYw.rev).s}</b>）。亮點＝<b>廣告效率強勢回升</b>：廣告費 WoW <b>${wow(L.ad,P.ad).s}</b>、訂單 <b>${wow(L.ord,P.ord).s}</b>，ROAS <b>${P.roas.toFixed(1)}→${L.roas.toFixed(1)}</b>、CPA <b>${money(P.cpa)}→${money(L.cpa)}</b>。上週中秋尾段過度加碼、轉不動；本週廣告收手後效率回正。流量 WoW ${wow(L.uv,P.uv).s}（中秋 9/25 後自然回落）、客單 ${wow(L.aov,P.aov).s}，但轉換率 <b>${wow(L.cr,P.cr).s}</b> 完全補回。`;
+
+// 週對比 bars
+const wkData=[['本週（9/28–10/4）',L.rev,'#0f5faf'],['上週（9/21–27）',P.rev,'#9aa6b2'],['去年同週（2025/9/28–10/4）',LYw.rev,'#e0993a']];
+const wmax=Math.max(...wkData.map(r=>r[1]));
+document.getElementById('wkbars').innerHTML=wkData.map(([nm,v,c])=>`<div class="catrow"><div class="nm" style="width:190px">${nm}</div><div class="track"><i style="width:${(v/wmax*100).toFixed(1)}%;background:${c}"></i></div><div class="val"><b>${money(v)}</b></div></div>`).join('');
+document.getElementById('wknote').innerHTML=`vs 上週 <b>${wow(L.rev,P.rev).s}</b>（WoW）、vs 去年同週 <b>${wow(L.rev,LYw.rev).s}</b>（YoY）。<b>口徑提醒</b>：去年同週為中秋前段衝刺（2025 中秋 10/6），流量基期偏高，故 YoY 流量 ${wow(L.uv,LYw.uv).s} 多屬節奏差異；惟轉換率 YoY <b>${wow(L.cr,LYw.cr).s}</b>、ROAS YoY <b>${wow(L.roas,LYw.roas).s}</b>、訂單 YoY <b>${wow(L.ord,LYw.ord).s}</b>，成交與廣告效率均優於去年。`;
 
 // 月目標
 const pct=MONTH_CUM/MONTH_TARGET*100;
 document.getElementById('mcum').textContent=money(MONTH_CUM);
 document.getElementById('mtgt').textContent=money(MONTH_TARGET);
-document.getElementById('mpctlabel').innerHTML=`達成率 <b>${pct.toFixed(1)}%</b>　（月進度 ${(DAYS_ELAPSED/MONTH_DAYS*100).toFixed(0)}%，剩 ${MONTH_DAYS-DAYS_ELAPSED} 天）`;
-document.getElementById('mbar').style.width=Math.min(100,pct)+'%';
-const MONTH_LY=19667898;
 document.getElementById('mly').textContent=money(MONTH_LY);
-document.getElementById('mlyyoy').innerHTML='今年累計＝去年全月 '+(MONTH_CUM/MONTH_LY*100).toFixed(1)+'%';
-const proj=Math.round(MONTH_CUM/DAYS_ELAPSED*MONTH_DAYS);
-const yoyData=[['月目標',MONTH_TARGET,'#0f5faf'],['去年9月（全月）',MONTH_LY,'#9aa6b2'],['今年推估（全月）',proj,'#e0993a'],['今年累計（截至9/28）',MONTH_CUM,'#3f7d5a']];
-const ymax=Math.max(...yoyData.map(r=>r[1]));
-document.getElementById('yoybars').innerHTML=yoyData.map(([nm,v,c])=>`<div class="catrow"><div class="nm" style="width:150px">${nm}</div><div class="track"><i style="width:${(v/ymax*100).toFixed(1)}%;background:${c}"></i></div><div class="val"><b>${money(v)}</b></div></div>`).join('');
-document.getElementById('yoynote').innerHTML=`今年推估全月 <b>${money(proj)}</b>：YoY <b>${((proj/MONTH_LY-1)*100).toFixed(1)}%</b>（vs 去年9月）、vs 月目標 <b>${((proj/MONTH_TARGET-1)*100).toFixed(1)}%</b>。缺口同時來自「目標拉高（+20%）」與「今年較去年下滑」。`;
+document.getElementById('mpctlabel').innerHTML=`達成率 <b>${pct.toFixed(1)}%</b>　（月進度 ${(DAYS_ELAPSED/MONTH_DAYS*100).toFixed(0)}%，${DAYS_ELAPSED}/${MONTH_DAYS} 天，剩 ${MONTH_DAYS-DAYS_ELAPSED} 天）`;
+document.getElementById('mbar').style.width=Math.min(100,pct)+'%';
+document.getElementById('mnote2').innerHTML=`10 月目標 <b>${money(MONTH_TARGET)}</b>（YoY vs 去年 ${wow(MONTH_TARGET,MONTH_LY).s}）為<b>雙11背載</b>：官方週目標末兩週（10/19–31）合計佔 50%，故月初 4 天進度偏低屬正常，不代表落後。`;
 
-// 廣告 KPI（上週 vs 上上週）
-const [alw,apw]=sl(DAILY_AD),[glw,gpw]=sl(GA4_DAILY);
-const ad=w=>({fb:sum(w,1),g:sum(w,2),tot:sum(w,1)+sum(w,2)});
-const ga=w=>({paid:sum(w,1),org:sum(w,2),oth:sum(w,3)});
-const AL=ad(alw),AP=ad(apw),GL=ga(glw),GP=ga(gpw);
-const adCard=arr=>arr.map(([k,v,w,p])=>`<div class="card"><div class="k">${k}</div><div class="v">${v}</div><div class="wow ${w.cls}">${w.s}</div><div class="prev">上上週 ${p}</div></div>`).join('');
-document.getElementById('adspend').innerHTML=adCard([['總廣告費',money(AL.tot),wow(AL.tot,AP.tot,true),money(AP.tot)],['Facebook 花費',money(AL.fb),wow(AL.fb,AP.fb,true),money(AP.fb)],['Google 花費',money(AL.g),wow(AL.g,AP.g,true),money(AP.g)]]);
-document.getElementById('adga4').innerHTML=adCard([['付費 sessions（GA4）',nf(GL.paid),wow(GL.paid,GP.paid),nf(GP.paid)],['自然 sessions（GA4）',nf(GL.org),wow(GL.org,GP.org),nf(GP.org)],['其他 sessions（GA4）',nf(GL.oth),wow(GL.oth,GP.oth),nf(GP.oth)]]);
-const paidShare=GL.paid/(GL.paid+GL.org+GL.oth)*100;
-document.getElementById('adinsight').innerHTML=`上週廣告費 <b>${wow(AL.tot,AP.tot).s}</b>（FB ${wow(AL.fb,AP.fb).s}、Google ${wow(AL.g,AP.g).s}）、付費 sessions ${wow(GL.paid,GP.paid).s}，但營業額 <b>${wow(L.rev,P.rev).s}</b>、ROAS <b>${wow(L.roas,P.roas).s}</b>——<b>加碼廣告、流量有進，卻轉不動</b>（轉換率 ${wow(L.cr,P.cr).s}、CPA ${wow(L.cpa,P.cpa,true).s}）。付費佔上週流量 ${paidShare.toFixed(0)}%（高度依賴付費）。`;
+// 廣告（本週）——總額/ROAS/CPA 已更新；分流待補
+const adCard=arr=>arr.map(([k,v,w,p,y,ly])=>`<div class="card"><div class="k">${k}</div><div class="v">${v}</div><div class="wow ${w.cls}">WoW ${w.s}</div><div class="prev">上週 ${p}</div><div class="prev" style="margin-top:3px">YoY <span class="yoy ${y.cls}">${y.s}</span>・去年 ${ly}</div></div>`).join('');
+document.getElementById('adspend').innerHTML=adCard([
+ ['總廣告費',money(L.ad),wow(L.ad,P.ad,true),money(P.ad),wow(L.ad,LYw.ad,true),money(LYw.ad)],
+ ['ROAS',L.roas.toFixed(2),wow(L.roas,P.roas),P.roas.toFixed(2),wow(L.roas,LYw.roas),LYw.roas.toFixed(2)],
+ ['CPA',money(L.cpa),wow(L.cpa,P.cpa,true),money(P.cpa),wow(L.cpa,LYw.cpa,true),money(LYw.cpa)]
+]);
+document.getElementById('adpend').innerHTML=`<b>⚠️ 本週分流數據待補</b>（饅頭補入後更新）：<b>FB／Google 廣告花費分流</b>、<b>GA4 付費／自然 sessions</b>、<b>各品類廣告花費</b>。上方「總廣告費／ROAS／CPA」與每日總廣告費圖已採本週（9/28–10/4）實數，可先用。`;
 
 // charts
-function bars(el,data,vi,hiFrom,color,hi,W){W=W||1120;const H=210,padB=22,padT=8,n=data.length,max=Math.max(...data.map(r=>r[vi]));const bw=(W-16)/n,gap=Math.min(6,bw*0.22);let s='';data.forEach((r,i)=>{const x=8+i*bw,bh=(r[vi]/max)*(H-padT-padB),y=H-padB-bh,c=(i>=hiFrom)?hi:color;s+=`<rect x="${(x+gap/2).toFixed(1)}" y="${y.toFixed(1)}" width="${(bw-gap).toFixed(1)}" height="${bh.toFixed(1)}" rx="2" fill="${c}"><title>9/${r[0]}: ${nf(r[vi])}</title></rect>`;if(r[0]%7===1||r[0]===28)s+=`<text x="${(x+bw/2).toFixed(1)}" y="${H-6}" font-size="11" fill="#6b7686" text-anchor="middle">9/${r[0]}</text>`;});el.innerHTML=`<svg viewBox="0 0 ${W} ${H}" role="img">${s}</svg>`;}
-bars(document.getElementById('chart'),daily,4,20,'#c7d2de','#0f5faf');
-
-// 每日廣告 stacked
-(function(){const W=560,H=210,padB=22,padT=8,n=DAILY_AD.length,max=Math.max(...DAILY_AD.map(r=>r[1]+r[2]));const bw=(W-16)/n,gap=Math.min(4,bw*0.2);let s='';DAILY_AD.forEach((r,i)=>{const x=8+i*bw,w=bw-gap,fbh=(r[1]/max)*(H-padT-padB),ggh=(r[2]/max)*(H-padT-padB),yFb=H-padB-fbh,yGg=yFb-ggh;s+=`<rect x="${(x+gap/2).toFixed(1)}" y="${yFb.toFixed(1)}" width="${w.toFixed(1)}" height="${fbh.toFixed(1)}" fill="#2f6fb0"><title>9/${r[0]} FB $${nf(r[1])}</title></rect><rect x="${(x+gap/2).toFixed(1)}" y="${yGg.toFixed(1)}" width="${w.toFixed(1)}" height="${ggh.toFixed(1)}" fill="#e0993a"><title>9/${r[0]} G $${nf(r[2])}</title></rect>`;if(r[0]%7===1||r[0]===28)s+=`<text x="${(x+bw/2).toFixed(1)}" y="${H-6}" font-size="11" fill="#6b7686" text-anchor="middle">9/${r[0]}</text>`;});document.getElementById('adchart').innerHTML=`<svg viewBox="0 0 ${W} ${H}" role="img">${s}</svg>`;})();
-
-// GA4 付費vs自然 折線
-(function(){const W=560,H=210,padB=22,padT=10,padL=8,padR=8,n=GA4_DAILY.length,max=Math.max(...GA4_DAILY.map(r=>Math.max(r[1],r[2],r[3])));const X=i=>padL+i*((W-padL-padR)/(n-1)),Y=v=>H-padB-(v/max)*(H-padT-padB);const line=(idx,c)=>`<path d="${GA4_DAILY.map((r,i)=>`${i?'L':'M'}${X(i).toFixed(1)} ${Y(r[idx]).toFixed(1)}`).join(' ')}" fill="none" stroke="${c}" stroke-width="2"/>`;let lab=GA4_DAILY.map((r,i)=>(r[0]%7===1||r[0]===28)?`<text x="${X(i).toFixed(1)}" y="${H-6}" font-size="11" fill="#6b7686" text-anchor="middle">9/${r[0]}</text>`:'').join('');document.getElementById('ga4chart').innerHTML=`<svg viewBox="0 0 ${W} ${H}" role="img">${line(3,'#c7d2de')}${line(2,'#3f7d5a')}${line(1,'#2f6fb0')}${lab}</svg>`;})();
-
-// 品類廣告 上週 + WoW
-(function(){const top=CAT_WEEK.slice(0,10),max=Math.max(...top.map(r=>r[1]));document.getElementById('catbars').innerHTML=top.map(([nm,l,p])=>{const w=wow(l,p,true);return `<div class="catrow"><div class="nm">${nm}</div><div class="track"><i style="width:${(l/max*100).toFixed(1)}%"></i></div><div class="val"><b>${money(l)}</b> <span class="w-${w.cls==='up'?'up':(w.cls==='down'?'down':'')}">${w.s}</span></div></div>`;}).join('');})();
+function bars(el,data,vi,hiFrom,color,hi,W){W=W||1120;const H=210,padB=22,padT=8,n=data.length,max=Math.max(...data.map(r=>r[vi]));const bw=(W-16)/n,gap=Math.min(6,bw*0.22);let s='';data.forEach((r,i)=>{const x=8+i*bw,bh=(r[vi]/max)*(H-padT-padB),y=H-padB-bh,c=(i>=hiFrom)?hi:color;s+=`<rect x="${(x+gap/2).toFixed(1)}" y="${y.toFixed(1)}" width="${(bw-gap).toFixed(1)}" height="${bh.toFixed(1)}" rx="2" fill="${c}"><title>${r[0]}: ${nf(r[vi])}</title></rect>`;if(i%7===0||i===n-1)s+=`<text x="${(x+bw/2).toFixed(1)}" y="${H-6}" font-size="11" fill="#6b7686" text-anchor="middle">${r[0]}</text>`;});el.innerHTML=`<svg viewBox="0 0 ${W} ${H}" role="img">${s}</svg>`;}
+bars(document.getElementById('chart'),daily,4,daily.length-7,'#c7d2de','#0f5faf');
+bars(document.getElementById('adchart'),daily,5,daily.length-7,'#c7d2de','#2f6fb0',1120);
 
 // 10月目標（D69:L76）
 const OCT=[["滴雞精",4941980,0.248,6167591,0.36,6721093,"高"],["鱸魚精",1812019,0.28,2319384,0.40,2536827,"中"],["寶寶燉飯",2774968,0.19,3302212,0.30,3607458,"中"],["寶寶粥&其他",5235412,-0.02,5130704,0.07,5601891,"高·破口"],["兒童保健",1510433,0.09,1646372,0.18,1782311,"中"],["蔓越莓",330575,-0.13,287600,-0.05,314046,"低"],["調理",352924,0.03,363512,0.13,398804,"中"]];
@@ -199,11 +191,11 @@ document.getElementById('octtable').innerHTML=`<table class="oct"><thead><tr><th
 document.getElementById('octrisk').innerHTML=`<b>風險盤查（現況戰況）</b><br>
 • <b>基期問題</b>：去年 10 月是「十週年（一次性）＋中秋禮盒」大檔、基期結構性偏高；今年為常態檔期 → <b>保守 +10% 已具挑戰、積極 +20% 偏樂觀</b>。<br>
 • <b>最大破口：寶寶粥&其他</b>（權重 31%）：趨勢 −18% 卻需逆勢翻正（保守 −2%／積極 +7%），補不回即拖垮總額。<br>
-• <b>滴雞精</b>積極 +36% 遠高於趨勢（+17%）；<b>兒童保健</b>去年基期高，但今年 YOYO 聯名延續有撐。<br>
+• <b>滴雞精</b>積極 +36% 遠高於趨勢；<b>兒童保健</b>去年基期高，但今年 YOYO 聯名延續有撐。<br>
 • <b>真正成長引擎在 11 月雙11</b>；10 月定位為守＋蓄水獲新客。<br>
 • 實際官網案型（滿額贈／加購／檔期機制）Ann 介紹。`;
 
-document.getElementById('foot').innerHTML='資料來源：業績報表（Winnie 建立）2026｜9月＋10月分頁；廣告＝KDDR BI 報告；流量＝GA4　｜　更新：2026-09-29';
+document.getElementById('foot').innerHTML='資料來源：業績報表（Winnie 建立）2026＋2025｜9月／10月分頁；流量＝GA4｜廣告分流（FB/Google・GA4付費自然・品類）待補｜更新：2026-10-06';
 </script>
 </body>
 </html>
