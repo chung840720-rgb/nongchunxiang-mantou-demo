@@ -63,9 +63,6 @@
 </header>
 <div class="banner" id="banner"></div>
 
-<h2>先辨偽：這週 +5% 是真贏還是假贏？</h2>
-<div class="take" id="verify" style="background:#fff8e8;border-left-color:var(--warn)"></div>
-
 <h2>Q1　業績三因子誰在動？｜三大槓桿拆解</h2>
 <div class="formula">營業額 ≈ <span>流量</span> × <span>轉換率</span> × <span>客單價</span>　<span style="font-size:12px;color:var(--sub);font-weight:400">（三大槓桿・方向性拆解，相乘約等於、非精確恆等）</span></div>
 <div class="grid" id="gmv"></div>
@@ -154,9 +151,11 @@ const DAILY_AD=[
 const CAT_META=[["滴雞精",70642],["寶寶粥",38509],["寶寶",35620],["寶寶燉飯",27869],["寶寶系列",25227],["不分品項",24687],["燕窩滴雞精",18377],["雞魚",15017],["益生菌",10645],["燕窩鱸魚精",7387],["兒童保健",4305],["寶寶米餅",3594]];
 const KDDR={fbVal:1979298,ggVal:2545549};
 
-// 去年同週 2025/9/28–10/4 合計（業績報表）
-const LYw={rev:3890212,ord:1324,uv:58006,ad:713225};
-LYw.aov=LYw.rev/LYw.ord;LYw.cr=LYw.ord/LYw.uv;LYw.roas=LYw.rev/LYw.ad;LYw.cpa=LYw.ad/LYw.ord;
+// 去年同週 2025/9/28–10/4 每日（業績報表）[label, sess, uv, 訂單, 營業額, 廣告]
+const LY_DAILY=[
+ ["9/28",0,7888,164,530147,103930],["9/29",0,7996,237,646288,91337],["9/30",0,9104,235,667688,116748],
+ ["10/1",0,9642,237,696177,108161],["10/2",0,8630,206,653892,111548],["10/3",0,7915,140,388867,97549],
+ ["10/4",0,6831,105,307153,83952]];
 
 const WK_TARGET=4800000; // 本週目標＝9/28-30 $2.3M ＋ 10/1-4 $2.5M（跨月拼接）
 const MONTH_TARGET=20964764,MONTH_CUM=1626002,MONTH_DAYS=31,DAYS_ELAPSED=4,MONTH_LY=16958311;
@@ -183,8 +182,11 @@ const wow=(c,p,inv=false)=>{const d=(c-p)/p*100;const up=d>=0;const cls=Math.abs
 const pp=(c,p)=>{const d=(c-p)*100;const cls=Math.abs(d)<0.05?'flat':(d>=0?'up':'down');return {cls,s:(d>=0?'+':'')+d.toFixed(2)+'pp'};};
 
 const [lw,pw]=sl(daily);
-const agg=w=>{const o={rev:sum(w,4),ord:sum(w,3),uv:sum(w,2),ad:sum(w,5)};o.aov=o.rev/o.ord;o.cr=o.ord/o.uv;o.roas=o.rev/o.ad;o.cpa=o.ad/o.ord;return o;};
-const L=agg(lw),P=agg(pw);
+const agg=w=>{const o={rev:sum(w,4),ord:sum(w,3),uv:sum(w,2),ad:sum(w,5)};
+ o.cr=w.reduce((s,r)=>s+r[3]/r[2],0)/w.length;   // 加總後平均：每日轉換率(訂單/UV)的均值＝業績報表口徑
+ o.aov=w.reduce((s,r)=>s+r[4]/r[3],0)/w.length;  // 每日客單(營業額/訂單)的均值＝業績報表口徑
+ o.roas=o.rev/o.ad;o.cpa=o.ad/o.ord;return o;};
+const L=agg(lw),P=agg(pw),LYw=agg(LY_DAILY);
 const cardFull=([k,v,w,p,y,ly],hl)=>`<div class="card${hl?' hl':''}"><div class="k">${k}</div><div class="v">${v}</div><div class="wow ${w.cls}">WoW ${w.s}</div><div class="prev">上週 ${p}</div><div class="prev" style="margin-top:3px">YoY <span class="yoy ${y.cls}">${y.s}</span>・去年 ${ly}</div></div>`;
 
 // banner
@@ -197,7 +199,7 @@ document.getElementById('gmv').innerHTML=[
  ['× 客單價',money(L.aov),wow(L.aov,P.aov),money(P.aov),wow(L.aov,LYw.aov),money(LYw.aov)],
  ['營業額（業績報表實際）',money(L.rev),wow(L.rev,P.rev),money(P.rev),wow(L.rev,LYw.rev),money(LYw.rev)]
 ].map((a,i)=>cardFull(a,i===3)).join('');
-document.getElementById('gmvtake').innerHTML=`<b>拆解：本週 GMV +5.0%（YoY −5.2%），完全靠轉換率撐。</b>流量 WoW ${wow(L.uv,P.uv).s}（中秋 9/25 後回落）、客單 ${wow(L.aov,P.aov).s} 雙降，但轉換率 <b>${pp(L.cr,P.cr).s}</b>（YoY ${pp(L.cr,LYw.cr).s}）全部補回——<b>轉換率是本週唯一的成長引擎</b>，也是後續（IG 內容牆、訪客結帳）要守住的槓桿。<br><span style="font-size:12px;color:var(--sub)">註：轉換率＝訂單÷不重複訪客（加總後）、客單＝營業額÷訂單；三者相乘 ≈ 營業額（因四捨五入與口徑非精確相等），<b>營業額以業績報表為準</b>。</span><br>→ <b>下一題</b>：轉換率升是「誰」貢獻的？看新舊客。`;
+document.getElementById('gmvtake').innerHTML=`<b>拆解：本週 GMV +5.0%（YoY −5.2%），完全靠轉換率撐。</b>流量 WoW ${wow(L.uv,P.uv).s}（中秋 9/25 後回落）、客單 ${wow(L.aov,P.aov).s} 雙降，但轉換率 <b>${pp(L.cr,P.cr).s}</b>（YoY ${pp(L.cr,LYw.cr).s}）全部補回——<b>轉換率是本週唯一的成長引擎</b>，也是後續（IG 內容牆、訪客結帳）要守住的槓桿。<br><span style="font-size:12px;color:var(--sub)">註：轉換率、客單皆取<b>每日值的平均</b>（業績報表「加總後平均」口徑，非 sum訂單÷sum流量）；故三者相乘 ≈ 營業額（非精確恆等），<b>營業額以業績報表為準</b>。</span><br>→ <b>下一題</b>：轉換率升是「誰」貢獻的？看新舊客。`;
 
 // 總業績 & 達標
 const pctWk=L.rev/WK_TARGET*100;
@@ -212,9 +214,6 @@ document.getElementById('mly').textContent=money(MONTH_LY);
 document.getElementById('mpctlabel').innerHTML=`月達成率 <b>${pct.toFixed(1)}%</b>　（月進度 ${(DAYS_ELAPSED/MONTH_DAYS*100).toFixed(0)}%，${DAYS_ELAPSED}/${MONTH_DAYS} 天）`;
 document.getElementById('mbar').style.width=Math.min(100,pct)+'%';
 document.getElementById('mnote2').innerHTML=`10 月目標 ${money(MONTH_TARGET)}（YoY vs 去年 ${wow(MONTH_TARGET,MONTH_LY).s}）為<b>雙11背載</b>：末兩週（10/19–31）合計佔 50%，月初進度偏低屬正常。`;
-
-// 先辨偽節點
-document.getElementById('verify').innerHTML=`<b>別急著慶祝 +5%——先過三關：</b><br>• <b>沒達標</b>：週達成僅 ${pctWk.toFixed(0)}%（目標 ${money(WK_TARGET)}、缺口 ${money(WK_TARGET-L.rev)}）。<br>• <b>YoY 仍 ${wow(L.rev,LYw.rev).s}</b>：營收仍低於去年同週。<br>• <b>confounder（最關鍵）</b>：10/1–19 有「會員加碼回饋」購物金活動（發放約 $800k）——下方<b>舊客本週的跳升，要先扣掉活動效果</b>才能算體質。<br>• <b>口徑</b>：新舊客＝Shopline 實際；漏斗／流量結構＝GA4（兩者口徑不同，別混加）。<br>→ 所以真正要問的不是「有沒有成長」，而是 <b>「成長從哪來、能不能複製」</b>——以下依此追問。`;
 
 // 核心效率 KPI
 document.getElementById('kpis').innerHTML=[
